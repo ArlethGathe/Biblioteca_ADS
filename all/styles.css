@@ -69,7 +69,6 @@ a:hover {
     border: solid 1px #000000;
     border-radius: 15px;
     background-color: #f0f8ff;
-    visibility: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
