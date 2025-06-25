@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="email" name="correo" placeholder="Correo" required>
         <input type="password" name="clave" placeholder="Contraseña" required>
         <input type="submit" value="Registrarse">
-        <a href="index.php">Volver al login</a>
+        <a href="../index.php">Volver al login</a>
         <?php if (isset($error)) echo "<p style='color:red; text-align:center;'>$error</p>"; ?>
     </form>
 </body>

@@ -66,7 +66,8 @@ a:hover {
     background-color: #003366;
 }
 .iniS{
-    border: solid 1px #b3d1ff;
+    border: solid 1px #000000;
+    border-radius: 15px;
     background-color: #f0f8ff;
     visibility: hidden;
     display: flex;

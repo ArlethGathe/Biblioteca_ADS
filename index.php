@@ -25,13 +25,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="all/styles.css">
 </head>
 <body>
-    <div class=""iniS>
+    <div class="iniS">
     <h2>Iniciar Sesión</h2>
     <form method="post">
         <input type="text" name="usuario" placeholder="Usuario" required>
         <input type="password" name="clave" placeholder="Contraseña" required>
         <input type="submit" value="Entrar">
-        <a href="register.php">¿No tienes cuenta? Regístrate</a>
+        <a href="all/register.php">¿No tienes cuenta? <br>Regístrate</a>
         <?php if (isset($error)) echo "<p style='color:red; text-align:center;'>$error</p>"; ?>
     </form>
 </div>

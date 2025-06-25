@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </form>
 
     <div style="text-align: center; margin-top: 15px;">
-        <a href="gestionar_usuarios.php">← Volver a gestión</a>
+        <a href="all/gestionar_usuarios.php">← Volver a gestión</a>
     </div>
 
     <?php if (isset($mensaje)) echo "<p style='text-align:center;'>$mensaje</p>"; ?>
