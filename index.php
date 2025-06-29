@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="text" name="usuario" placeholder="Usuario" required>
         <input type="password" name="clave" placeholder="Contraseña" required>
         <input type="submit" value="Entrar" >
-        <input type="button" value="¿No tienes cuenta? Regístrate" onclick="window.location.href='all/register.php'">
+        <input type="button" value="¿No tienes cuenta? Regístrate" onclick="window.location.href='register.php'">
         
         <?php if (isset($error)) echo "<p style='color:red; text-align:center;'>$error</p>"; ?>
     </form>
