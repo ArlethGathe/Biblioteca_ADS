@@ -5,7 +5,15 @@ body {
     margin: 0;
     padding: 0;
 }
-
+.Sinicio{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-self: stretch;
+    margin-top: 160px;
+    background-color: rgb(115, 185, 255);
+}
 h2 {
     text-align: center;
     color: #0059b3;
