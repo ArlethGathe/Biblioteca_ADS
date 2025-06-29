@@ -6,12 +6,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $correo = $_POST["correo"];
     $clave = $_POST["clave"];
 
-    $sql = "INSERT INTO usuarios (usuario, correo, clave) VALUES ('$usuario', '$correo', '$clave')";
-    if ($conexion->query($sql) === TRUE) {
-        header("Location: index.php");
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM usuarios WHERE usuario = ?");
+    $stmt->execute([$usuario]);
+    $existe = $stmt->fetchColumn();
+
+    if ($existe) {
+        $error = "El nombre de usuario ya está registrado. Elige otro.";
     } else {
-        $error = "Error al registrar";
-    }
+        // Registrar el nuevo usuario
+        $stmt = $pdo->prepare("INSERT INTO usuarios (usuario, correo, clave) VALUES ('$usuario', '$correo', '$clave')");
+        if ($stmt->execute([$usuario, $correo, $clave])) {
+            header("Location: index.php");
+            exit;
+        } else {
+            $error = "Error al registrar.";
+        }
+}
 }
 ?>
 
