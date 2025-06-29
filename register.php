@@ -31,15 +31,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Registro</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-    <h2>Registro de Usuario</h2>
+<body class="Sinicio">
+    <div class="iniS">
+       <h2>Registro de Usuario</h2>
     <form method="post">
         <input type="text" name="usuario" placeholder="Usuario" required>
         <input type="email" name="correo" placeholder="Correo" required>
         <input type="password" name="clave" placeholder="Contraseña" required>
         <input type="submit" value="Registrarse">
-        <a href="index.php">Volver al login</a>
+        <input type="button" value="Volver" onclick="window.location.href='index.php'">
+
+        
         <?php if (isset($error)) echo "<p style='color:red; text-align:center;'>$error</p>"; ?>
     </form>
+        </div>
+</div>
 </body>
 </html>
