@@ -33,18 +33,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <title>Login</title>
     <link rel="stylesheet" href="styles.css">
+    
 </head>
 <body class="Sinicio">
+    <header>
+        <h1>Biblioteca Digital</h1>
+    </header>
     <div class="iniS">
     <h2>Iniciar Sesión</h2>
-    <form method="post">
-        <input type="text" name="usuario" placeholder="Usuario" required>
-        <input type="password" name="clave" placeholder="Contraseña" required>
-        <input type="submit" value="Entrar" >
-        <input type="button" value="¿No tienes cuenta? Regístrate" onclick="window.location.href='register.php'">
-        
-        <?php if (isset($error)) echo "<p style='color:red; text-align:center;'>$error</p>"; ?>
-    </form>
+    <div class="form-inicio">
+        <form method="post">
+            <input type="text" name="usuario" placeholder="Usuario" required>
+            <input type="password" name="clave" placeholder="Contraseña" required>
+            <input type="submit" value="Entrar" >
+            <input type="button" value="¿No tienes cuenta? Regístrate" onclick="window.location.href='register.php'">
+            
+            <?php if (isset($error)) echo "<p style='color:red; text-align:center;'>$error</p>"; ?>
+        </form>
+    </div>
 </div>
 </body>
 </html>

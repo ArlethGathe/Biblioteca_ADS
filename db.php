@@ -2,7 +2,7 @@
 // db.php — Conexión PDO a la base de datos "biblioteca"
 
 $host     = '127.0.0.1';
-$db       = 'biblioteca';
+$db       = 'libros';
 $user     = 'root';
 $password = '';           // En XAMPP suele estar vacío
 $charset  = 'utf8mb4';
@@ -22,3 +22,4 @@ try {
     exit;
 }
 
+?>
