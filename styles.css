@@ -90,3 +90,15 @@ a:hover {
     border-radius: 15px;
     background-color: #f0f8ff;
 }
+
+.boton-perfil {
+    background-color: #0056b3; /* Azul */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+

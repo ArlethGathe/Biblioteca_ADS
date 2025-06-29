@@ -1,13 +1,13 @@
 <?php
 // db.php — Conexión PDO a la base de datos "biblioteca"
 
-$host     = '127.0.0.1';
-$db       = 'libros';
+$host     = 'localhost';  // Cambiar de 127.0.0.1 a localhost
+$db       = 'biblioteca';
 $user     = 'root';
-$password = '';           // En XAMPP suele estar vacío
+$password = '';           
 $charset  = 'utf8mb4';
 
-$dsn = "mysql:host={$host};dbname={$db};charset={$charset}";
+$dsn = "mysql:host={$host};port=3307;dbname={$db};charset={$charset}";
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -16,10 +16,9 @@ $options = [
 
 try {
     $pdo = new PDO($dsn, $user, $password, $options);
+    echo "Conexión exitosa"; // Para probar
 } catch (PDOException $e) {
-    // Si falla la conexión, mostramos el error y detenemos la ejecución
     echo 'Error de conexión: ' . $e->getMessage();
     exit;
 }
-
 ?>
