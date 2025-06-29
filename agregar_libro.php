@@ -106,79 +106,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tipo'])) {
     <meta charset="UTF-8">
     <title>Agregar Libro</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f9;
-            margin: 0;
-            padding: 0;
-        }
+    <link rel="stylesheet" href="estilo_moreL.css">
 
-        .container {
-            width: 80%;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        h2 {
-            color: #003366;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            font-weight: bold;
-        }
-
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        .btn-submit {
-            background-color: #0056b3;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .btn-submit:hover {
-            background-color: #00408e;
-        }
-
-        .alert-error {
-            color: red;
-            font-size: 14px;
-        }
-
-        .alert-success {
-            color: green;
-            font-size: 14px;
-        }
-
-        .btn-back {
-            background-color: #f44336;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-        }
-
-        .btn-back:hover {
-            background-color: #d32f2f;
-        }
-    </style>
+    
 </head>
 <body>
 
