@@ -34,14 +34,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Login</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="Sinicio">
+    <div class="iniS">
     <h2>Iniciar Sesión</h2>
     <form method="post">
         <input type="text" name="usuario" placeholder="Usuario" required>
         <input type="password" name="clave" placeholder="Contraseña" required>
-        <input type="submit" value="Entrar">
-        <a href="register.php">¿No tienes cuenta? Regístrate</a>
+        <input type="submit" value="Entrar" >
+        <input type="button" value="¿No tienes cuenta? Regístrate" onclick="window.location.href='all/register.php'">
+        
         <?php if (isset($error)) echo "<p style='color:red; text-align:center;'>$error</p>"; ?>
     </form>
+</div>
 </body>
 </html>
