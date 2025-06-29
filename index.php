@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Almacenar el usuario y su id en la sesión
         $usuario_data = $stmt->fetch();
         $_SESSION["usuario"] = $usuario_data['usuario'];
-        $_SESSION["id"] = $usuario_data['id'];  // Asegúrate de almacenar el ID aquí
+        $_SESSION["id_usuarios"] = $usuario_data['id_usuarios'];
         $_SESSION["rol"] = $usuario_data['rol']; // Almacenar también el rol
 
         header("Location: home_usuario.php"); // Redirige si las credenciales son correctas

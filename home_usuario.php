@@ -45,8 +45,11 @@ $libros = $result->fetchAll();
 
         <!-- Botón de Cerrar sesión en la esquina superior derecha -->
         <a href="logout.php" class="btn-logout">Cerrar sesión</a>
+        <a href="perfil.php">
+        <button class="boton-perfil">Mi perfil</button></a>
 
-        <?php if ($usuario_rol === 'bibliotecario'): ?>
+
+        <?php if ($usuario_rol === 'bibliotecario' || $usuario_rol === 'administrador'): ?>
             <!-- Botón de Agregar libro solo visible para bibliotecarios -->
             <div class="mb-4">
                 <a href="agregar_libro.php" class="btn-add">+ Agregar libro</a>
