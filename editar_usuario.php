@@ -1,28 +1,58 @@
 <?php
+/*
 include("db.php");
 
 // Obtener usuarios para el desplegable
-$usuarios = $conexion->query("SELECT id, usuario FROM usuarios");
+$usuarios = $pdo->query("SELECT id_usuarios, usuario FROM usuarios");
 
 // Cuando se selecciona un usuario para editar
 if (isset($_POST["seleccionar"])) {
-    $id = $_POST["id_usuario"];
-    $datos = $conexion->query("SELECT * FROM usuarios WHERE id = $id")->fetch_assoc();
+    $id = $_POST["id_usuarios"];
+    $datos = $pdo->query("SELECT * FROM usuarios WHERE id_usuarios = '$id'")->fetch_assoc();
 }
 
 // Cuando se guardan los cambios
 if (isset($_POST["guardar"])) {
-    $id = $_POST["id_usuario"];
+    $id = $_POST["id_usuarios"];
     $correo = $_POST["correo"];
     $clave = $_POST["clave"];
     $rol = $_POST["rol"];
 
-    $sql = "UPDATE usuarios SET correo='$correo', clave='$clave', rol='$rol' WHERE id=$id";
+    $sql = "UPDATE usuarios SET correo='$correo', clave='$clave', rol='$rol' WHERE id_usuarios=$id";
 
-    if ($conexion->query($sql) === TRUE) {
+    if ($pdo->query($sql) === TRUE) {
         $mensaje = "Usuario actualizado correctamente.";
     } else {
         $mensaje = "Error al actualizar: " . $conexion->error;
+    }
+}*/
+include("db.php");
+
+// Obtener usuarios para el desplegable
+$usuarios = $pdo->query("SELECT id_usuarios, usuario FROM usuarios")->fetchAll(PDO::FETCH_ASSOC);
+
+// Cuando se selecciona un usuario para editar
+$datos = null;
+if (isset($_POST["seleccionar"])) {
+    $id = $_POST["id_usuarios"];
+    $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE id_usuarios = ?");
+    $stmt->execute([$id]);
+    $datos = $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+// Cuando se guardan los cambios
+if (isset($_POST["guardar"])) {
+    $id = $_POST["id_usuarios"];
+    $correo = $_POST["correo"];
+    $clave = $_POST["clave"];
+    $rol = $_POST["rol"];
+
+    try {
+        $stmt = $pdo->prepare("UPDATE usuarios SET correo = ?, clave = ?, rol = ? WHERE id_usuarios = ?");
+        $stmt->execute([$correo, $clave, $rol, $id]);
+        $mensaje = "Usuario actualizado correctamente.";
+    } catch (PDOException $e) {
+        $mensaje = "Error al actualizar: " . $e->getMessage();
     }
 }
 ?>
@@ -36,42 +66,46 @@ if (isset($_POST["guardar"])) {
 <body>
     <h2>Editar Usuario</h2>
 
+   <form method="post">
+    <label for="id_usuarios">Selecciona un usuario:</label>
+    <select name="id_usuarios" required>
+        <option value="">-- Elige uno --</option>
+        <?php foreach ($usuarios as $fila) { ?>
+            <option value="<?php echo htmlspecialchars($fila["id_usuarios"]); ?>"
+                <?php if (isset($datos) && $datos["id_usuarios"] == $fila["id_usuarios"]) echo "selected"; ?>>
+                <?php echo htmlspecialchars($fila["usuario"]); ?>
+            </option>
+        <?php } ?>
+    </select>
+    <input type="submit" name="seleccionar" value="Editar">
+</form>
+
+<?php if (isset($datos)) { ?>
     <form method="post">
-        <label for="id_usuario">Selecciona un usuario:</label>
-        <select name="id_usuario" required>
-            <option value="">-- Elige uno --</option>
-            <?php while ($fila = $usuarios->fetch_assoc()) { ?>
-                <option value="<?php echo $fila["id"]; ?>"
-                    <?php if (isset($datos) && $datos["id"] == $fila["id"]) echo "selected"; ?>>
-                    <?php echo $fila["usuario"]; ?>
-                </option>
-            <?php } ?>
+        <input type="hidden" name="id_usuarios" value="<?php echo htmlspecialchars($datos["id_usuarios"]); ?>">
+
+        <label>Correo:</label>
+        <input type="email" name="correo" value="<?php echo htmlspecialchars($datos["correo"]); ?>" required>
+
+        <label>Clave:</label>
+        <input type="text" name="clave" value="<?php echo htmlspecialchars($datos["clave"]); ?>" required>
+
+        <label for="rol">Rol:</label>
+        <select name="rol">
+            <option value="administrador" <?php if ($datos["rol"] == "administrador") echo "selected"; ?>>Administrador</option>
+            <option value="lector" <?php if ($datos["rol"] == "lector") echo "selected"; ?>>Lector</option>
+            <option value="bibliotecario" <?php if ($datos["rol"] == "bibliotecario") echo "selected"; ?>>Bibliotecario</option>
         </select>
-        <input type="submit" name="seleccionar" value="Editar">
+
+        <input type="submit" name="guardar" value="Guardar Cambios">
     </form>
+<?php } ?>
 
-    <?php if (isset($datos)) { ?>
-        <form method="post">
-            <input type="hidden" name="id_usuario" value="<?php echo $datos["id"]; ?>">
+<?php if (isset($mensaje)) echo "<p style='text-align:center;'>$mensaje</p>"; ?>
 
-            <input type="email" name="correo" value="<?php echo $datos["correo"]; ?>" required>
-            <input type="text" name="clave" value="<?php echo $datos["clave"]; ?>" required>
 
-            <label for="rol">Rol:</label>
-            <select name="rol">
-                <option value="Administrador" <?php if ($datos["rol"] == "Administrador") echo "selected"; ?>>Administrador</option>
-                <option value="Lector" <?php if ($datos["rol"] == "Lector") echo "selected"; ?>>Lector</option>
-                <option value="Bibliotecario" <?php if ($datos["rol"] == "Bibliotecario") echo "selected"; ?>>Bibliotecario</option>
-            </select>
-
-            <input type="submit" name="guardar" value="Guardar Cambios">
-        </form>
-    <?php } ?>
-
-    <?php if (isset($mensaje)) echo "<p style='text-align:center;'>$mensaje</p>"; ?>
-
-    <div style="text-align:center; margin-top: 20px;">
-        <a href="gestionar_usuarios.php">← Volver a gestión</a>
+    <div class="botones">
+        <input type="button" value="Volver" class="btn-back" onclick="window.location.href='home_usuario.php'">
     </div>
 </body>
 </html>

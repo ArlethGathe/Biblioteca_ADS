@@ -96,3 +96,8 @@ body {
         .btn-logout:hover {
             background-color: #c82333;
         }
+.acciones {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }

@@ -40,8 +40,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="submit" value="Agregar Usuario">
     </form>
 
-    <div style="text-align: center; margin-top: 15px;">
-        <a href="gestionar_usuarios.php">← Volver a gestión</a>
+    <div class="botones">
+        <input type="button" value="Volver" class="btn-back" onclick="window.location.href='gestionar_usuarios.php'">
     </div>
 
     <?php if (isset($mensaje)) echo "<p style='text-align:center;'>$mensaje</p>"; ?>

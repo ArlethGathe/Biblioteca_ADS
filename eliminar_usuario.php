@@ -1,23 +1,29 @@
 <?php
+
 include("db.php");
 
-// Obtener usuarios disponibles
-$usuarios = $conexion->query("SELECT id, usuario FROM usuarios");
+// Obtener usuarios disponibles (para el select)
+$stmt = $pdo->query("SELECT id_usuarios, usuario FROM usuarios");
+$usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Si se envía el formulario
+// Si se envía el formulario para eliminar
 if (isset($_POST["eliminar"])) {
-    $id = $_POST["id_usuario"];
-    $sql = "DELETE FROM usuarios WHERE id = $id";
+    $id = $_POST["id_usuarios"];
 
-    if ($conexion->query($sql) === TRUE) {
+    try {
+        $stmt = $pdo->prepare("DELETE FROM usuarios WHERE id_usuarios = ?");
+        $stmt->execute([$id]);
         $mensaje = "Usuario eliminado correctamente.";
-    } else {
-        $mensaje = "Error al eliminar: " . $conexion->error;
+    } catch (PDOException $e) {
+        $mensaje = "Error al eliminar: " . $e->getMessage();
     }
 
-    // Recargar la lista actualizada
-    $usuarios = $conexion->query("SELECT id, usuario FROM usuarios");
+    // Recargar usuarios actualizados
+    $stmt = $pdo->query("SELECT id_usuarios, usuario FROM usuarios");
+    $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+
 ?>
 
 <!DOCTYPE html>
@@ -28,22 +34,22 @@ if (isset($_POST["eliminar"])) {
 </head>
 <body>
     <h2>Eliminar Usuario</h2>
-
     <form method="post">
-        <label for="id_usuario">Selecciona un usuario para eliminar:</label>
-        <select name="id_usuario" required>
-            <option value="">-- Elige uno --</option>
-            <?php while ($fila = $usuarios->fetch_assoc()) { ?>
-                <option value="<?php echo $fila["id"]; ?>">
-                    <?php echo $fila["usuario"]; ?>
-                </option>
-            <?php } ?>
-        </select>
+    <label for="id_usuarios">Selecciona un usuario para eliminar:</label>
+    <select name="id_usuarios" required>
+        <option value="">-- Elige uno --</option>
+        <?php foreach ($usuarios as $u): ?>
+            <option value="<?= htmlspecialchars($u["id_usuarios"]) ?>">
+                <?= htmlspecialchars($u["usuario"]) ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+    <button type="submit" name="eliminar" onclick="return confirm('¿Seguro que deseas eliminar este usuario?')">
+        Eliminar
+    </button>
+</form>
 
-        <input type="submit" name="eliminar" value="Eliminar Usuario" style="background-color:#cc0000;">
-    </form>
-
-    <?php if (isset($mensaje)) echo "<p style='text-align:center;'>$mensaje</p>"; ?>
+<?php if (isset($mensaje)) echo "<p style='text-align:center;'>$mensaje</p>"; ?>
 
     <div style="text-align: center; margin-top: 20px;">
         <a href="gestionar_usuarios.php">← Volver a gestión</a>

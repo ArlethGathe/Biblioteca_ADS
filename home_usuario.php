@@ -47,15 +47,20 @@ $libros = $result->fetchAll();
         <a href="logout.php" class="btn-logout">Cerrar sesión</a>
         <a href="perfil.php">
         <button class="boton-perfil">Mi perfil</button></a>
-
-
+    <div class="acciones">
+        
         <?php if ($usuario_rol === 'bibliotecario' || $usuario_rol === 'administrador'): ?>
             <!-- Botón de Agregar libro solo visible para bibliotecarios -->
             <div class="mb-4">
                 <a href="agregar_libro.php" class="btn-add">+ Agregar libro</a>
             </div>
         <?php endif; ?>
-
+        <?php if ( $usuario_rol === 'administrador'): ?>
+            <div class="mb-4">
+                <a href="gestionar_usuarios.php" class="btn-add">Gestionar Usuarios</a>
+            </div>
+        <?php endif; ?>
+    </div>
         <!-- Barra de búsqueda -->
         <div class="search-bar">
             <input type="text" id="searchText" placeholder="Buscar por título, autor, etc.">
@@ -80,7 +85,7 @@ $libros = $result->fetchAll();
                         <p>Clasificación: <?php echo htmlspecialchars($book['clasificacion']); ?></p>
 
                         <!-- Los botones de edición y eliminación son solo para bibliotecarios -->
-                        <?php if ($usuario_rol === 'bibliotecario'): ?>
+                        <?php if ($usuario_rol === 'bibliotecario' || $usuario_rol === 'administrador'): ?>
                             <a href="editar_libro.php?id=<?php echo $book['id']; ?>" class="btn-search">Editar</a>
                             <a href="eliminar_libro.php?id=<?php echo $book['id']; ?>" class="btn-search">Eliminar</a>
                         <?php endif; ?>
