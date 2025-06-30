@@ -6,8 +6,10 @@ $db       = 'biblioteca';
 $user     = 'root';
 $password = '';           
 $charset  = 'utf8mb4';
+$port     = 3306;  
 
-$dsn = "mysql:host={$host};port=3307;dbname={$db};charset={$charset}";
+$dsn = "mysql:host=$host;port=$port;dbname=$db;charset=$charset";
+
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -16,7 +18,7 @@ $options = [
 
 try {
     $pdo = new PDO($dsn, $user, $password, $options);
-    echo "Conexión exitosa"; // Para probar
+   
 } catch (PDOException $e) {
     echo 'Error de conexión: ' . $e->getMessage();
     exit;

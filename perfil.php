@@ -34,6 +34,53 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $mensaje = "🔐 Contraseña actualizada.";
     }
 }
+function validarPasswords($password, $confirmPassword, $minLength = 8) {
+      $errores = [];
+    
+    // Verificar campos vacíos
+    if (empty($password)) {
+        $errores[] = 'La contraseña es obligatoria';
+    }
+    
+    if (empty($confirmPassword)) {
+        $errores[] = 'La confirmación de contraseña es obligatoria';
+    }
+    
+    // Si hay errores básicos, retornar
+    if (!empty($errores)) {
+        return [
+            'valido' => false,
+            'errores' => $errores
+        ];
+    }
+    
+    // Verificar longitud mínima
+    if (strlen($password) < $minLength) {
+        $errores[] = "La contraseña debe tener al menos $minLength caracteres";
+    }
+    
+    // Verificar que las contraseñas coincidan
+    if ($password !== $confirmPassword) {
+        $errores[] = 'Las contraseñas no coinciden';
+        return [
+            'valido' => false,
+            'errores' => $errores
+        ];
+    }
+    
+    
+    if (empty($errores)) {
+        return [
+            'valido' => true,
+            'mensaje' => 'Las contraseñas son válidas y coinciden'
+        ];
+    } else {
+        return [
+            'valido' => false,
+            'errores' => $errores
+        ];
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -60,13 +107,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <input type="submit" name="actualizar" value="Actualizar datos">
     </form>
 
-    <h3>Cambiar contraseña</h3>
+    <h2>Cambiar contraseña</h2>
     <form method="post">
         <label>Nueva contraseña:</label>
         <input type="password" name="nueva_clave" required><br>
+        <label>Repita su nueva contraseña:</label>
+        <input type="password" name="nueva_clave2" required><br>
+        <?php
+        $password1 = $_POST['nueva_clave'] ?? '';
+        $password2 = $_POST['nueva_clave2'] ?? '';
+        $resultado = validarPasswords($password1, $password2);
+       echo $resultado['valido'] ? "<p style='color: green;'>".$resultado['mensaje']."</p>" : "<p style='color: red;'>".implode('<br>', $resultado['errores'])."</p>";
+        ?>
         <input type="submit" name="cambiar_clave" value="Cambiar contraseña">
+        
     </form>
-
-    <br><a href="home_usuario.php">Volver al catálogo</a>
+    <input type="button" value="Volver al Catálogo" class="btn-back" onclick="window.location.href='home_usuario.php'">
+    
 </body>
 </html>
