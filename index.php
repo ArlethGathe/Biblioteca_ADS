@@ -46,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="text" name="usuario" placeholder="Usuario" required>
             <input type="password" id="clave" name="clave" placeholder="Contraseña" required>
             <input type="checkbox" id="mostrarPass">
-            <label class="mostrar">Mostrar Contraseña</label>
+            <label class="mostrar">Mostrar Contraseña</label><br>
             <script src="mostrar_contraseña.js"></script>
             <input type="submit" value="Entrar" >
             <input type="button" value="¿No tienes cuenta? Regístrate" onclick="window.location.href='register.php'">
