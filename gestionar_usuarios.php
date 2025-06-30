@@ -92,7 +92,7 @@ if (isset($_GET['busqueda']) && $_GET['busqueda'] !== "") {
     <div class="contenedor-busqueda">
     <form method="GET" action="">
         <div class="input-con-boton">
-            <input type="text" name="busqueda" placeholder="Buscar por usuario o correo" class="input-busqueda" value="<?php echo isset($_GET['busqueda']) ? htmlspecialchars($_GET['busqueda']) : ''; ?>">
+            <input type="text" name="busqueda" placeholder="Visualizar por usuario o correo" class="input-busqueda" value="<?php echo isset($_GET['busqueda']) ? htmlspecialchars($_GET['busqueda']) : ''; ?>">
             <button type="submit" class="boton-lupa">&#128269;</button> <!-- lupa como ícono -->
         </div>
     </form>
@@ -120,7 +120,7 @@ if (isset($_GET['busqueda']) && $_GET['busqueda'] !== "") {
             <th>Usuario</th>
             <th>Correo</th>
             <th>Rol</th>
-            <th>Acción</th>
+          
         </tr>
         <?php
         $stmt = $pdo->query("SELECT * FROM usuarios"); 
@@ -130,11 +130,6 @@ if (isset($_GET['busqueda']) && $_GET['busqueda'] !== "") {
             <td><?php echo $fila["usuario"]; ?></td>
             <td><?php echo $fila["correo"]; ?></td>
             <td><?php echo $fila["rol"]; ?></td>
-            <td>
-                <a href="editar_usuario.php" class="btn-search" style="text-decoration:none; color:inherit;" title="Editar usuario">
-                    <button>Editar</button>
-                </a>
-            </td>
         </tr>
         <?php } ?>
     </table>
