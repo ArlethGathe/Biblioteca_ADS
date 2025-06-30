@@ -51,7 +51,6 @@ input[type="submit"], input[type="button"]{
     background-color: #0059b3;
     color: white;
     padding: 10px;
-    width: 100%;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -71,18 +70,15 @@ a {
 
 a {
     display: inline-block;
-    background-color: #004080;
     color: white;
-    padding: 10px 15px;
+    padding: 10px 0px;
     border-radius: 5px;
     text-decoration: none;
     font-weight: bold;
     margin-top: 10px;
 }
 
-a:hover {
-    background-color: #003366;
-}
+
 
 .iniS{
     width: 500px;
@@ -97,7 +93,6 @@ a:hover {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    margin-left: 10px;
     cursor: pointer;
     font-size: 14px;
 }

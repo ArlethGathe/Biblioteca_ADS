@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         .container {
             width: 80%;
-            margin: 0 auto;
+            margin: 30px auto;
             background-color: #fff;
             padding: 20px;
             border-radius: 8px;
@@ -133,31 +133,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .btn-back {
-            background-color: #f44336;
+            background-color: #003060;
             color: white;
             padding: 10px 20px;
             border-radius: 5px;
             text-decoration: none;
             display: block;
             margin: 20px auto;
+            width: 20%;
         }
 
         .btn-back:hover {
             background-color: #d32f2f;
         }
+        #solPre{
+            margin: auto;
+            background-color: none;
+            padding: 0px;
+            border: none;
+            border-radius: 0px;
+            box-shadow: 0 0 0px;
+}
+        
 
-        .btn-back:hover, .btn-submit:hover {
-            background-color: #003060;
-        }
-
-        /* Custom form styling */
-        select, input[type="text"], input[type="number"] {
-            padding: 10px;
-            margin: 5px 0 15px 0;
-            width: 100%;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
+     
     </style>
 </head>
 <body>
@@ -196,12 +195,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <!-- Botón para solicitar préstamo -->
-    <form method="POST">
+    <form method="POST" id="solPre">
         <button type="submit" class="btn-submit">Solicitar Préstamo</button>
     </form>
 
     <!-- Volver al catálogo -->
-    <a href="home_usuario.php" class="btn-back">Volver al Catálogo</a>
+    <input type="button" value="Volver al Catálogo" class="btn-back" onclick="window.location.href='home_usuario.php'">
+    
 </div>
 
 </body>

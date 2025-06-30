@@ -44,7 +44,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="form-inicio">
         <form method="post">
             <input type="text" name="usuario" placeholder="Usuario" required>
-            <input type="password" name="clave" placeholder="Contraseña" required>
+            <input type="password" id="clave" name="clave" placeholder="Contraseña" required>
+            <input type="checkbox" id="mostrarPass">
+            <label class="mostrar">Mostrar Contraseña</label>
+            <script src="mostrar_contraseña.js"></script>
             <input type="submit" value="Entrar" >
             <input type="button" value="¿No tienes cuenta? Regístrate" onclick="window.location.href='register.php'">
             
