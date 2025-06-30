@@ -51,8 +51,8 @@ if (isset($_POST["eliminar"])) {
 
 <?php if (isset($mensaje)) echo "<p style='text-align:center;'>$mensaje</p>"; ?>
 
-    <div style="text-align: center; margin-top: 20px;">
-        <a href="gestionar_usuarios.php">← Volver a gestión</a>
+    <div class="botones">
+        <input type="button" value="Volver" class="btn-back" onclick="window.location.href='gestionar_usuarios.php'">
     </div>
 </body>
 </html>

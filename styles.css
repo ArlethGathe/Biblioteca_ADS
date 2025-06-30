@@ -38,7 +38,7 @@ form {
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
-input[type="text"], input[type="password"], input[type="email"]  {
+input[type="text"], input[type="password"], input[type="email"], input[type="date"], select {
     width: 95%;
     padding: 10px;
     margin: 10px 0;

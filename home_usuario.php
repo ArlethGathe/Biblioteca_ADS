@@ -45,8 +45,13 @@ $libros = $result->fetchAll();
 
         <!-- Botón de Cerrar sesión en la esquina superior derecha -->
         <a href="logout.php" class="btn-logout">Cerrar sesión</a>
-        <a href="perfil.php">
-        <button class="boton-perfil">Mi perfil</button></a>
+             <?php if ( $usuario_rol === 'lector'): ?>
+            <div class="mb-4">
+                <a href="perfil.php">
+                <button class="boton-perfil">Mi perfil</button></a>
+            </div>
+        <?php endif; ?>
+        
     <div class="acciones">
         
         <?php if ($usuario_rol === 'bibliotecario' || $usuario_rol === 'administrador'): ?>
@@ -54,12 +59,22 @@ $libros = $result->fetchAll();
             <div class="mb-4">
                 <a href="agregar_libro.php" class="btn-add">+ Agregar libro</a>
             </div>
+            <div class="mb-4">
+                <a href="#" class="btn-add">Prestamos</a>
+            </div>
+            <div class="mb-4">
+                <a href="#" class="btn-add">Multas</a>
+            </div>
+            
         <?php endif; ?>
         <?php if ( $usuario_rol === 'administrador'): ?>
             <div class="mb-4">
                 <a href="gestionar_usuarios.php" class="btn-add">Gestionar Usuarios</a>
             </div>
         <?php endif; ?>
+        <div class="mb-4">
+                <a href="#" class="btn-add">Biblioteca Digital</a>
+            </div>
     </div>
         <!-- Barra de búsqueda -->
         <div class="search-bar">
