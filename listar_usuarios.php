@@ -2,7 +2,7 @@
 include("db.php");
 
 // Obtener todos los usuarios
-$usuarios = $conexion->query("SELECT * FROM usuarios");
+$usuarios = $pdo->query("SELECT * FROM usuarios")->fetchALL(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -39,15 +39,19 @@ $usuarios = $conexion->query("SELECT * FROM usuarios");
             <th>ID</th>
             <th>Usuario</th>
             <th>Correo</th>
+            <th>Fecha de Nacimiento</th>
             <th>Rol</th>
+             <th>Fecha de Registro</th>
         </tr>
 
-        <?php while ($fila = $usuarios->fetch_assoc()) { ?>
+        <?php foreach ($usuarios as $fila) { ?>
         <tr>
-            <td><?php echo $fila["id"]; ?></td>
+            <td><?php echo $fila["id_usuarios"]; ?></td>
             <td><?php echo $fila["usuario"]; ?></td>
             <td><?php echo $fila["correo"]; ?></td>
+            <td><?php echo $fila["fecha_nacimiento"]; ?></td>
             <td><?php echo $fila["rol"]; ?></td>
+            <td><?php echo $fila["creado_at"]; ?></td>
         </tr>
         <?php } ?>
     </table>
