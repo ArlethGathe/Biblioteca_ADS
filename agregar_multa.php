@@ -1,7 +1,9 @@
 <?php
 include("db.php");
 
+
 $usuarios = $pdo->query("SELECT usuario FROM usuarios WHERE rol = 'lector'");
+ain
 $titulos = $pdo->query("SELECT  titulo FROM libros");
 $fechaVenS = $pdo->query("SELECT fecha_vencimiento FROM prestamos");
 
@@ -12,6 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $fechaNac = $_POST["fecha_vence"];  
     $cantidadP = $_POST["deuda"];
     $descripcion = $_POST["descripcion"];
+
 
     try {
     $stmt = $pdo->prepare("INSERT INTO multas (usuario, titulo, fecha_vencimiento, cantidad_pesos, descripcion) 
@@ -29,6 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 }
+
 
 ?>
 
@@ -61,10 +65,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <!-- Fecha -->
         <label for="fecha_vence">Fecha de vencimiento:</label>
+
         <select name="fecha_vence" >
             <option value="">Selecciona una fecha</option>
             <?php while ($f = $fechaVenS->fetch(PDO::FETCH_ASSOC)): ?>
                 <option value="<?= $f['fecha_vencimiento'] ?>"><?= htmlspecialchars($f['fecha_vencimiento']) ?></option>
+
             <?php endwhile; ?>
         </select>
         <label for="cantidad_Pesos">Deuda:</label>
