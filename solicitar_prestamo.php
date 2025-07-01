@@ -7,9 +7,9 @@ $libro_id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
 if ($libro_id > 0) {
     // Obtener detalles del libro
-    $sql = "SELECT * FROM libros WHERE id = :id";
+    $sql = "SELECT * FROM libros WHERE id_libro = :id_libro";  // Cambié 'id_prestamo' a 'id_libro'
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([':id' => $libro_id]);
+    $stmt->execute([':id_libro' => $libro_id]);  // Asegúrate de usar ':id_libro' en lugar de ':id'
     $libro = $stmt->fetch();
 
     if (!$libro) {
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Verificar que hay libros disponibles antes de procesar la solicitud
     if ($libro['cantidad'] > 0) {
         // Actualizar la cantidad de libros
-        $sql_update = "UPDATE libros SET cantidad = cantidad - 1, estado = 'prestado' WHERE id = :libro_id";
+        $sql_update = "UPDATE libros SET cantidad = cantidad - 1, estado = 'prestado' WHERE id_libro = :libro_id";
         $stmt = $pdo->prepare($sql_update);
         $stmt->execute([':libro_id' => $libro_id]);
 
@@ -76,85 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <title>Solicitar Préstamo</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f9;
-            margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            width: 80%;
-            margin: 30px auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        h2 {
-            color: #003366;
-            text-align: center;
-        }
-
-        .book-info {
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .book-info img {
-            max-width: 200px;
-            height: auto;
-            margin-bottom: 15px;
-        }
-
-        .btn-submit {
-            background-color: #0056b3;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            display: block;
-            margin: 20px auto;
-        }
-
-        .btn-submit:hover {
-            background-color: #00408e;
-        }
-
-        .alert-success {
-            color: green;
-            text-align: center;
-        }
-
-        .alert-error {
-            color: red;
-            text-align: center;
-        }
-
-        .btn-back {
-            background-color: #003060;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-            display: block;
-            margin: 20px auto;
-            width: 20%;
-        }
-
-        .btn-back:hover {
-            background-color: #d32f2f;
-        }
-        #solPre {
-            margin: auto;
-            background-color: none;
-            padding: 0px;
-            border: none;
-            border-radius: 0px;
-            box-shadow: 0 0 0px;
-        }
+   
     </style>
 </head>
 <body>
@@ -204,3 +126,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 </body>
 </html>
+

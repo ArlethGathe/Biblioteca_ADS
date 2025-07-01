@@ -7,20 +7,20 @@ $usuario_rol = isset($_SESSION['rol']) ? $_SESSION['rol'] : 'lector';
 
 // Consulta SQL para obtener los libros
 if ($usuario_rol === 'bibliotecario') {
-    $sql = "SELECT libros.id, libros.titulo, libros.autor, libros.cantidad, libros.estado, 
+    $sql = "SELECT libros.id_libro, libros.titulo, libros.autor, libros.cantidad, libros.estado, 
                    libros.portada,
                    generos.nombre AS genero, clasificaciones.nombre AS clasificacion
             FROM libros
-            LEFT JOIN generos ON libros.genero_id = generos.id
-            LEFT JOIN clasificaciones ON libros.clasificacion_id = clasificaciones.id
+            LEFT JOIN generos ON libros.genero_id = generos.id_genero
+            LEFT JOIN clasificaciones ON libros.clasificacion_id = clasificaciones.id_clasificacion
             ORDER BY libros.creado_at DESC";
 } else {
-    $sql = "SELECT libros.id, libros.titulo, libros.autor, libros.cantidad, libros.estado, 
+    $sql = "SELECT libros.id_libro, libros.titulo, libros.autor, libros.cantidad, libros.estado, 
                    libros.portada,
                    generos.nombre AS genero, clasificaciones.nombre AS clasificacion
             FROM libros
-            LEFT JOIN generos ON libros.genero_id = generos.id
-            LEFT JOIN clasificaciones ON libros.clasificacion_id = clasificaciones.id
+            LEFT JOIN generos ON libros.genero_id = generos.id_genero
+            LEFT JOIN clasificaciones ON libros.clasificacion_id = clasificaciones.id_clasificacion
             WHERE libros.estado = 'disponible'
             ORDER BY libros.creado_at DESC";
 }
@@ -65,12 +65,12 @@ $libros = $result->fetchAll();
                         <p>Clasificación: <?php echo htmlspecialchars($book['clasificacion']); ?></p>
 
                         <?php if ($usuario_rol === 'bibliotecario' || $usuario_rol === 'administrador'): ?>
-                            <a href="editar_libro.php?id=<?php echo $book['id']; ?>" class="btn-search">Editar</a>
-                            <a href="eliminar_libro.php?id=<?php echo $book['id']; ?>" class="btn-search">Eliminar</a>
+                            <a href="editar_libro.php?id=<?php echo $book['id_libro']; ?>" class="btn-search">Editar</a>
+                            <a href="eliminar_libro.php?id=<?php echo $book['id_libro']; ?>" class="btn-search">Eliminar</a>
                         <?php endif; ?>
 
                         <?php if ($usuario_rol === 'lector'): ?>
-                            <a href="solicitar_prestamo.php?id=<?php echo $book['id']; ?>" class="btn-search">Leer</a>
+                            <a href="solicitar_prestamo.php?id=<?php echo $book['id_libro']; ?>" class="btn-search">Leer</a>
                         <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
@@ -79,10 +79,8 @@ $libros = $result->fetchAll();
             <?php endif; ?>
         </div>
     </div>
-<div class="botones">
+    <div class="botones">
         <input type="button" value="Volver" class="btn-back" onclick="window.location.href='home_usuario.php'">
     </div>
-    
 </body>
 </html>
-

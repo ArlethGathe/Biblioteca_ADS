@@ -1,12 +1,13 @@
 <?php
 session_start();
+require __DIR__ . '/db.php';
 
 // Verificar si el bibliotecario está logueado
 if (!isset($_SESSION['usuario']) || $_SESSION['rol'] != 'bibliotecario') {
     die('Acceso denegado.');
 }
 
-require __DIR__ . '/db.php';
+
 
 // Verificar que el parámetro 'id' y 'accion' estén presentes en la URL
 if (!isset($_GET['id']) || !isset($_GET['accion'])) {

@@ -8,9 +8,10 @@ if (!isset($_GET['id'])) {
 
 $libro_id = $_GET['id'];
 
-$sql = "SELECT * FROM libros WHERE id = :id";
+// Corregir la consulta para usar 'id_libro' en lugar de 'id'
+$sql = "SELECT * FROM libros WHERE id_libro = :id_libro";  // Cambié 'id' por 'id_libro'
 $stmt = $pdo->prepare($sql);
-$stmt->execute([':id' => $libro_id]);
+$stmt->execute([':id_libro' => $libro_id]);  // Asegúrate de usar ':id_libro' en lugar de ':id'
 $libro = $stmt->fetch();
 
 if (!$libro) {
@@ -52,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (empty($errores)) {
+        // Corregir la consulta para usar 'id_libro' en lugar de 'id'
         $sql_update = "UPDATE libros SET
             titulo = :titulo,
             autor = :autor,
@@ -62,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             genero_id = :genero_id,
             clasificacion_id = :clasificacion_id,
             portada = :portada
-            WHERE id = :id";
+            WHERE id_libro = :id_libro";  // Cambié 'id' por 'id_libro'
 
         $stmt = $pdo->prepare($sql_update);
         $stmt->execute([
@@ -75,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':genero_id' => $genero_id,
             ':clasificacion_id' => $clasificacion_id,
             ':portada' => $portada,
-            ':id' => $libro_id
+            ':id_libro' => $libro_id  // Asegúrate de usar ':id_libro'
         ]);
 
         $success = 'Libro actualizado correctamente.';
@@ -193,7 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label for="genero_id">Género</label>
             <select name="genero_id" required>
                 <?php foreach ($generos as $genero): ?>
-                    <option value="<?php echo $genero['id']; ?>" <?php echo ($libro['genero_id'] == $genero['id']) ? 'selected' : ''; ?>>
+                    <option value="<?php echo $genero['id_genero']; ?>" <?php echo ($libro['genero_id'] == $genero['id_genero']) ? 'selected' : ''; ?>>
                         <?php echo htmlspecialchars($genero['nombre']); ?>
                     </option>
                 <?php endforeach; ?>
@@ -203,7 +205,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label for="clasificacion_id">Clasificación</label>
             <select name="clasificacion_id" required>
                 <?php foreach ($clasificaciones as $clasificacion): ?>
-                    <option value="<?php echo $clasificacion['id']; ?>" <?php echo ($libro['clasificacion_id'] == $clasificacion['id']) ? 'selected' : ''; ?>>
+                    <option value="<?php echo $clasificacion['id_clasificacion']; ?>" <?php echo ($libro['clasificacion_id'] == $clasificacion['id_clasificacion']) ? 'selected' : ''; ?>>
                         <?php echo htmlspecialchars($clasificacion['nombre']); ?>
                     </option>
                 <?php endforeach; ?>

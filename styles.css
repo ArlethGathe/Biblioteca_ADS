@@ -176,7 +176,7 @@ a {
     color: white;
     text-decoration: none;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 20px;
 }
 
 .btn-container a:hover {
@@ -232,3 +232,85 @@ a {
         .btn-reject {
             background-color: #d32f2f;
         }
+
+/*Solicitar préstamo*/
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 30px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #003366;
+            text-align: center;
+        }
+
+        .book-info {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .book-info img {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .btn-submit {
+            background-color: #0056b3;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto;
+        }
+
+        .btn-submit:hover {
+            background-color: #00408e;
+        }
+
+        .alert-success {
+            color: green;
+            text-align: center;
+        }
+
+        .alert-error {
+            color: red;
+            text-align: center;
+        }
+
+        .btn-back {
+            background-color: #003060;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: block;
+            margin: 20px auto;
+            width: 20%;
+        }
+
+        .btn-back:hover {
+            background-color: #d32f2f;
+        }
+        #solPre {
+            margin: auto;
+            background-color: none;
+            padding: 0px;
+            border: none;
+            border-radius: 0px;
+            box-shadow: 0 0 0px;
+        }
+
+/*Editar libro*/

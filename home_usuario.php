@@ -2,40 +2,88 @@
 session_start();
 require __DIR__ . '/db.php';
 
-// Verificar si el rol está en la sesión
+// Obtener el término de búsqueda desde la URL
+$searchText = isset($_GET['search']) ? $_GET['search'] : '';
+
+// Verificar el rol del usuario
 $usuario_rol = isset($_SESSION['rol']) ? $_SESSION['rol'] : 'lector';
 
-// Consulta SQL para obtener los libros
+// Consulta SQL para obtener los libros, con o sin filtro de búsqueda
 if ($usuario_rol === 'bibliotecario') {
-    $sql = "SELECT libros.id, libros.titulo, libros.autor, libros.cantidad, libros.estado, 
-                   libros.portada,
-                   generos.nombre AS genero, clasificaciones.nombre AS clasificacion
-            FROM libros
-            LEFT JOIN generos ON libros.genero_id = generos.id
-            LEFT JOIN clasificaciones ON libros.clasificacion_id = clasificaciones.id
-            ORDER BY libros.creado_at DESC";
+    if ($searchText) {
+        // Si hay término de búsqueda
+        $sql = "SELECT libros.id_libro, libros.titulo, libros.autor, libros.cantidad, libros.estado, 
+                       libros.portada,
+                       generos.nombre AS genero, clasificaciones.nombre AS clasificacion
+                FROM libros
+                LEFT JOIN generos ON libros.genero_id = generos.id_genero
+                LEFT JOIN clasificaciones ON libros.clasificacion_id = clasificaciones.id_clasificacion
+                WHERE libros.titulo LIKE :search OR libros.autor LIKE :search
+                ORDER BY libros.creado_at DESC";
+    } else {
+        // Si no hay término de búsqueda
+        $sql = "SELECT libros.id_libro, libros.titulo, libros.autor, libros.cantidad, libros.estado, 
+                       libros.portada,
+                       generos.nombre AS genero, clasificaciones.nombre AS clasificacion
+                FROM libros
+                LEFT JOIN generos ON libros.genero_id = generos.id_genero
+                LEFT JOIN clasificaciones ON libros.clasificacion_id = clasificaciones.id_clasificacion
+                ORDER BY libros.creado_at DESC";
+    }
 } else {
-    $sql = "SELECT libros.id, libros.titulo, libros.autor, libros.cantidad, libros.estado, 
-                   libros.portada,
-                   generos.nombre AS genero, clasificaciones.nombre AS clasificacion
-            FROM libros
-            LEFT JOIN generos ON libros.genero_id = generos.id
-            LEFT JOIN clasificaciones ON libros.clasificacion_id = clasificaciones.id
-            WHERE libros.estado = 'disponible'
-            ORDER BY libros.creado_at DESC";
+    if ($searchText) {
+        // Si hay término de búsqueda para el rol de 'lector'
+        $sql = "SELECT libros.id_libro, libros.titulo, libros.autor, libros.cantidad, libros.estado, 
+                       libros.portada,
+                       generos.nombre AS genero, clasificaciones.nombre AS clasificacion
+                FROM libros
+                LEFT JOIN generos ON libros.genero_id = generos.id_genero
+                LEFT JOIN clasificaciones ON libros.clasificacion_id = clasificaciones.id_clasificacion
+                WHERE libros.estado = 'disponible' AND (libros.titulo LIKE :search OR libros.autor LIKE :search)
+                ORDER BY libros.creado_at DESC";
+    } else {
+        // Si no hay término de búsqueda para el rol de 'lector'
+        $sql = "SELECT libros.id_libro, libros.titulo, libros.autor, libros.cantidad, libros.estado, 
+                       libros.portada,
+                       generos.nombre AS genero, clasificaciones.nombre AS clasificacion
+                FROM libros
+                LEFT JOIN generos ON libros.genero_id = generos.id_genero
+                LEFT JOIN clasificaciones ON libros.clasificacion_id = clasificaciones.id_clasificacion
+                WHERE libros.estado = 'disponible'
+                ORDER BY libros.creado_at DESC";
+    }
 }
 
-$result = $pdo->query($sql);
-$libros = $result->fetchAll();
+// Preparar la consulta
+$stmt = $pdo->prepare($sql);
+
+// Ejecutar la consulta con el término de búsqueda si está presente
+if ($searchText) {
+    $stmt->execute([':search' => '%' . $searchText . '%']);
+} else {
+    // Si no hay término de búsqueda, ejecutamos la consulta sin el parámetro :search
+    $stmt->execute();
+}
+
+$libros = $stmt->fetchAll();
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Biblioteca Principal</title>
+    <title>Biblioteca Web</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="estilo_HomeUsuario.css">
+    <script>
+        // Función de búsqueda en JavaScript
+        function searchBook() {
+            var searchText = document.getElementById('searchText').value;
+            if (searchText.trim() !== '') {
+                window.location.href = "home_usuario.php?search=" + encodeURIComponent(searchText);
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="container">
@@ -43,16 +91,17 @@ $libros = $result->fetchAll();
 
         <!-- Botones -->
         <a href="logout.php" class="btn-logout">Cerrar sesión</a>
-             <?php if ( $usuario_rol === 'lector'): ?>
-            <div class="mb-4">
-                <a href="perfil.php">
-                <button class="boton-perfil">Mi perfil</button></a>
-            </div>
+        
+        <?php if ($usuario_rol === 'lector'): ?>
+        <div class="mb-4">
+            <a href="perfil.php">
+                <button class="boton-perfil">Mi perfil</button>
+            </a>
+        </div>
         <?php endif; ?>
-        
-    <div class="acciones">
-        
-        <?php if ($usuario_rol === 'bibliotecario' || $usuario_rol === 'administrador'): ?>
+
+        <div class="acciones">
+            <?php if ($usuario_rol === 'bibliotecario' || $usuario_rol === 'administrador'): ?>
             <!-- Botón de Agregar libro solo visible para bibliotecarios -->
             <div class="mb-4">
                 <a href="agregar_libro.php" class="btn-add">+ Agregar libro</a>
@@ -63,17 +112,19 @@ $libros = $result->fetchAll();
             <div class="mb-4">
                 <a href="multas.php" class="btn-add">Multas</a>
             </div>
-            
-        <?php endif; ?>
-        <?php if ( $usuario_rol === 'administrador'): ?>
+            <?php endif; ?>
+
+            <?php if ($usuario_rol === 'administrador'): ?>
             <div class="mb-4">
                 <a href="gestionar_usuarios.php" class="btn-add">Gestionar Usuarios</a>
             </div>
-        <?php endif; ?>
-        <div class="mb-4">
+            <?php endif; ?>
+
+            <div class="mb-4">
                 <a href="biblioD.php" class="btn-add">Biblioteca Digital</a>
             </div>
-    </div>
+        </div>
+
         <!-- Barra de búsqueda -->
         <div class="search-bar">
             <input type="text" id="searchText" placeholder="Buscar por título, autor, etc.">
@@ -82,7 +133,7 @@ $libros = $result->fetchAll();
 
         <!-- Catálogo de libros -->
         <div class="book-grid">
-            <?php if ($result && $result->rowCount() > 0): ?>
+            <?php if ($libros && count($libros) > 0): ?>
                 <?php foreach ($libros as $book): ?>
                     <div class="book-card">
                         <?php if (!empty($book['portada']) && file_exists(__DIR__ . '/portadas/' . $book['portada'])): ?>
@@ -99,12 +150,12 @@ $libros = $result->fetchAll();
                         <p>Clasificación: <?php echo htmlspecialchars($book['clasificacion']); ?></p>
 
                         <?php if ($usuario_rol === 'bibliotecario' || $usuario_rol === 'administrador'): ?>
-                            <a href="editar_libro.php?id=<?php echo $book['id']; ?>" class="btn-search">Editar</a>
-                            <a href="eliminar_libro.php?id=<?php echo $book['id']; ?>" class="btn-search">Eliminar</a>
+                            <a href="editar_libro.php?id=<?php echo $book['id_libro']; ?>" class="btn-search">Editar</a>
+                            <a href="eliminar_libro.php?id=<?php echo $book['id_libro']; ?>" class="btn-search">Eliminar</a>
                         <?php endif; ?>
 
                         <?php if ($usuario_rol === 'lector' && $book['estado'] === 'disponible'): ?>
-                            <a href="solicitar_prestamo.php?id=<?php echo $book['id']; ?>" class="btn-search">Ver libro</a>
+                            <a href="solicitar_prestamo.php?id=<?php echo $book['id_libro']; ?>" class="btn-search">Ver libro</a>
                         <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
@@ -113,8 +164,6 @@ $libros = $result->fetchAll();
             <?php endif; ?>
         </div>
     </div>
-
-    
 </body>
 </html>
 
