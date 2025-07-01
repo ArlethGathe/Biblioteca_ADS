@@ -3,7 +3,7 @@ include("db.php");
 
 
 $usuarios = $pdo->query("SELECT usuario FROM usuarios WHERE rol = 'lector'");
-ain
+
 $titulos = $pdo->query("SELECT  titulo FROM libros");
 $fechaVenS = $pdo->query("SELECT fecha_vencimiento FROM prestamos");
 
