@@ -73,7 +73,7 @@ $libros = $result->fetchAll();
                 <a href="agregar_libro.php" class="btn-add">+ Agregar libro</a>
             </div>
             <div class="mb-4">
-                <a href="#" class="btn-add">Prestamos</a>
+                <a href="prestamos.php" class="btn-add">Prestamos</a>
             </div>
             <div class="mb-4">
                 <a href="#" class="btn-add">Multas</a>
@@ -119,7 +119,7 @@ $libros = $result->fetchAll();
                         <?php endif; ?>
 
                         <?php if ($usuario_rol === 'lector' && $book['estado'] === 'disponible'): ?>
-                            <a href="solicitar_prestamo.php?id=<?php echo $book['id']; ?>" class="btn-search">Solicitar préstamo</a>
+                            <a href="solicitar_prestamo.php?id=<?php echo $book['id']; ?>" class="btn-search">Ver libro</a>
                         <?php endif; ?>
                     </div>
                 <?php endforeach; ?>

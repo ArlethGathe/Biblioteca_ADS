@@ -44,21 +44,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Obtener el ID del lector desde la sesión
-    $lector_id = $_SESSION['id'];
+    $lector_id = $_SESSION['usuario'];  // Cambiado a 'usuario' para que coincida con 'id_usuarios'
 
     // Verificar que hay libros disponibles antes de procesar la solicitud
     if ($libro['cantidad'] > 0) {
         // Actualizar la cantidad de libros
-        $sql_update = "UPDATE libros SET cantidad = cantidad - 1 WHERE id = :libro_id";
+        $sql_update = "UPDATE libros SET cantidad = cantidad - 1, estado = 'prestado' WHERE id = :libro_id";
         $stmt = $pdo->prepare($sql_update);
         $stmt->execute([':libro_id' => $libro_id]);
 
         // Insertar el préstamo en la base de datos
-        $sql = "INSERT INTO prestamos (libro_id, lector_id, estado) VALUES (:libro_id, :lector_id, 'pendiente')";
+        $sql = "INSERT INTO prestamos (libro_id, lector_id, fecha_solicitud, estado) 
+                VALUES (:libro_id, :lector_id, NOW(), 'pendiente')";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
             ':libro_id' => $libro_id,
-            ':lector_id' => $lector_id
+            ':lector_id' => $lector_id  // Usar el id_usuarios de la sesión
         ]);
 
         $success = 'Préstamo solicitado correctamente.';
@@ -146,17 +147,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .btn-back:hover {
             background-color: #d32f2f;
         }
-        #solPre{
+        #solPre {
             margin: auto;
             background-color: none;
             padding: 0px;
             border: none;
             border-radius: 0px;
             box-shadow: 0 0 0px;
-}
-        
-
-     
+        }
     </style>
 </head>
 <body>

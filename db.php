@@ -1,7 +1,7 @@
 <?php
 // db.php — Conexión PDO a la base de datos "biblioteca"
 
-$host     = 'localhost';  // Cambiar de 127.0.0.1 a localhost
+$host     = 'localhost'; 
 $db       = 'biblioteca';
 $user     = 'root';
 $password = '';           
