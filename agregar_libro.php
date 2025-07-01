@@ -2,19 +2,15 @@
 session_start();
 require __DIR__ . '/db.php';
 
-// Verificar si el rol está en la sesión
-$usuario_rol = isset($_SESSION['rol']) ? $_SESSION['rol'] : 'lector'; // Definir rol por defecto como 'lector'
+$usuario_rol = isset($_SESSION['rol']) ? $_SESSION['rol'] : 'lector';
 
-// Obtener géneros y clasificaciones
 $generos = $pdo->query("SELECT * FROM generos")->fetchAll();
 $clasificaciones = $pdo->query("SELECT * FROM clasificaciones")->fetchAll();
 
 $errores = [];
 $success = '';
 
-// Procesar el formulario de agregar libro
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tipo'])) {
-    // Si estamos agregando un nuevo libro
     if ($_POST['tipo'] === 'libro') {
         $titulo = trim($_POST['titulo']);
         $autor = trim($_POST['autor']);
@@ -25,15 +21,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tipo'])) {
         $genero_id = $_POST['genero_id'];
         $clasificacion_id = $_POST['clasificacion_id'];
 
-        // Validar que todos los campos estén completos
+        // Procesar portada
+        $ruta_portada = 'portadas/default.png'; // por defecto
+        if (isset($_FILES['portada']) && $_FILES['portada']['error'] === 0) {
+            $nombreArchivo = basename($_FILES["portada"]["name"]);
+            $nombreFinal = time() . '_' . $nombreArchivo;
+            $rutaDestino = 'portadas/' . $nombreFinal;
+            if (move_uploaded_file($_FILES["portada"]["tmp_name"], $rutaDestino)) {
+                $ruta_portada = $rutaDestino;
+            }
+        }
+
         if (empty($titulo) || empty($autor) || empty($editorial)) {
             $errores[] = 'Los campos Título, Autor y Editorial son obligatorios.';
         }
 
-        // Si no hay errores, insertar el libro
         if (empty($errores)) {
-            $sql_insert = "INSERT INTO libros (titulo, autor, editorial, edicion, cantidad, estado, genero_id, clasificacion_id)
-                           VALUES (:titulo, :autor, :editorial, :edicion, :cantidad, :estado, :genero_id, :clasificacion_id)";
+            $sql_insert = "INSERT INTO libros (titulo, autor, editorial, edicion, cantidad, estado, genero_id, clasificacion_id, portada)
+                           VALUES (:titulo, :autor, :editorial, :edicion, :cantidad, :estado, :genero_id, :clasificacion_id, :portada)";
             $stmt = $pdo->prepare($sql_insert);
             $stmt->execute([
                 ':titulo' => $titulo,
@@ -43,61 +48,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tipo'])) {
                 ':cantidad' => $cantidad,
                 ':estado' => $estado,
                 ':genero_id' => $genero_id,
-                ':clasificacion_id' => $clasificacion_id
+                ':clasificacion_id' => $clasificacion_id,
+                ':portada' => $ruta_portada
             ]);
 
             $success = 'Libro agregado correctamente.';
         }
     }
 
-    // Si estamos agregando un nuevo género
     if ($_POST['tipo'] === 'genero') {
         $nuevo_genero = trim($_POST['nuevo_genero']);
-        
-        // Verificar si el género ya existe
         $check_genero = $pdo->prepare("SELECT * FROM generos WHERE nombre = :nombre");
         $check_genero->execute([':nombre' => $nuevo_genero]);
         if ($check_genero->rowCount() > 0) {
             $errores[] = 'El género ya existe.';
         } else {
-            // Insertar el nuevo género
             if (!empty($nuevo_genero)) {
                 $sql_insert_genero = "INSERT INTO generos (nombre) VALUES (:nombre)";
                 $stmt = $pdo->prepare($sql_insert_genero);
                 $stmt->execute([':nombre' => $nuevo_genero]);
 
                 $success = 'Género agregado correctamente.';
-                // Actualizamos los géneros para incluir el recién agregado
                 $generos = $pdo->query("SELECT * FROM generos")->fetchAll();
             }
         }
     }
 
-    // Si estamos agregando una nueva clasificación
     if ($_POST['tipo'] === 'clasificacion') {
         $nueva_clasificacion = trim($_POST['nueva_clasificacion']);
-        
-        // Verificar si la clasificación ya existe
         $check_clasificacion = $pdo->prepare("SELECT * FROM clasificaciones WHERE nombre = :nombre");
         $check_clasificacion->execute([':nombre' => $nueva_clasificacion]);
         if ($check_clasificacion->rowCount() > 0) {
             $errores[] = 'La clasificación ya existe.';
         } else {
-            // Insertar la nueva clasificación
             if (!empty($nueva_clasificacion)) {
                 $sql_insert_clasificacion = "INSERT INTO clasificaciones (nombre) VALUES (:nombre)";
                 $stmt = $pdo->prepare($sql_insert_clasificacion);
                 $stmt->execute([':nombre' => $nueva_clasificacion]);
 
                 $success = 'Clasificación agregada correctamente.';
-                // Actualizamos las clasificaciones para incluir la recién agregada
                 $clasificaciones = $pdo->query("SELECT * FROM clasificaciones")->fetchAll();
             }
         }
     }
 }
-
-// Agregar nuevo género
 ?>
 
 <!DOCTYPE html>
@@ -107,18 +101,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tipo'])) {
     <title>Agregar Libro</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="estilo_moreL.css">
-
-    
 </head>
 <body>
 
 <div class="container">
     <h2>Agregar Nuevo Libro</h2>
 
-    <!-- Botón de Volver -->
     <a href="home_usuario.php" class="btn-back">&larr; Volver al panel</a>
 
-    <!-- Mostrar mensajes de éxito o error -->
     <?php if ($success): ?>
         <p class="alert-success"><?php echo $success; ?></p>
     <?php endif; ?>
@@ -131,8 +121,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tipo'])) {
         </ul>
     <?php endif; ?>
 
-    <!-- Formulario de agregar libro -->
-    <form method="POST" action="">
+    <!-- Formulario para agregar libro con portada -->
+    <form method="POST" action="" enctype="multipart/form-data">
         <div class="form-group">
             <label for="titulo">Título *</label>
             <input type="text" name="titulo" required>
@@ -161,7 +151,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tipo'])) {
                 <option value="reservado">Reservado</option>
             </select>
         </div>
-
         <div class="form-group">
             <label for="genero_id">Género</label>
             <select name="genero_id" required>
@@ -171,7 +160,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tipo'])) {
                 <?php endforeach; ?>
             </select>
         </div>
-
         <div class="form-group">
             <label for="clasificacion_id">Clasificación</label>
             <select name="clasificacion_id" required>
@@ -180,6 +168,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tipo'])) {
                     <option value="<?php echo $clasificacion['id']; ?>"><?php echo htmlspecialchars($clasificacion['nombre']); ?></option>
                 <?php endforeach; ?>
             </select>
+        </div>
+        <div class="form-group">
+            <label for="portada">Portada del libro</label>
+            <input type="file" name="portada" accept="image/*">
         </div>
 
         <button type="submit" class="btn-submit">Guardar libro</button>
