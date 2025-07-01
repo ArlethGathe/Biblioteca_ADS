@@ -1,24 +1,32 @@
 <?php
 session_start();
+require __DIR__ . '/db.php';
 
-// Verificar si el bibliotecario está logueado
-if (!isset($_SESSION['usuario']) || $_SESSION['rol'] != 'bibliotecario') {
+// Verificar si el bibliotecario está logueado y que el rol sea 'bibliotecario'
+if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'bibliotecario') {
     die('Acceso denegado.');
 }
 
-require __DIR__ . '/db.php';
-
-// Consultar los préstamos pendientes
+// Consulta SQL para obtener los préstamos pendientes
 $sql = "SELECT prestamos.*, libros.titulo, libros.autor, usuarios.usuario AS lector
-        FROM prestamos
-        JOIN libros ON prestamos.libro_id = libros.id
+        FROM prestamos JOIN libros ON prestamos.libro_id = libros.id
         JOIN usuarios ON prestamos.lector_id = usuarios.id_usuarios
         WHERE prestamos.estado = 'pendiente'";
 
-$stmt = $pdo->prepare($sql);
-$stmt->execute();
-$prestamos = $stmt->fetchAll();
+try {
+    // Preparar y ejecutar la consulta
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $prestamos = $stmt->fetchAll();
 
+    // Depuración: Verificar si la consulta devuelve resultados
+    if (!$prestamos) {
+        echo "No se encontraron préstamos pendientes.";
+    }
+} catch (PDOException $e) {
+    // Mostrar error si la consulta falla
+    die("Error al consultar la base de datos: " . $e->getMessage());
+}
 ?>
 
 <!DOCTYPE html>
@@ -27,7 +35,6 @@ $prestamos = $stmt->fetchAll();
     <meta charset="UTF-8">
     <title>Verificar Préstamos</title>
     <link rel="stylesheet" href="styles.css">
-    
 </head>
 <body>
 

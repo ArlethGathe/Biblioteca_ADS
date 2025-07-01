@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 01-07-2025 a las 20:32:54
+-- Servidor: 127.0.0.1:3307
+-- Tiempo de generación: 01-07-2025 a las 23:40:03
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -145,8 +145,8 @@ INSERT INTO `libros` (`id`, `titulo`, `autor`, `editorial`, `edicion`, `genero_i
 (17, 'El hobbit', 'J.R.R Tolkien', 'Minotauro', '1', 13, 9, 2, 'reservado', 'portadas/default.png', NULL, '2025-06-30 08:13:54'),
 (18, 'Las crónicas de Narnia', 'C.S Lewis', 'Destino', '1', 7, 13, 4, 'disponible', 'narnia.jpeg', NULL, '2025-06-30 08:14:43'),
 (19, 'The Fahrenheit 451', 'Ray Bradbury', 'Minotauro', '2', 7, 12, 2, 'prestado', 'fahrenheit.jpeg', NULL, '2025-06-30 08:19:47'),
-(20, 'Ready Player One', 'Ernest Cline', 'Nova', '1', 7, 10, 4, 'disponible', 'readyplayer.jpeg', NULL, '2025-06-30 08:20:32'),
-(21, 'Los 7 hábitos de la gente altamente efectiva', 'Stephen Covey', 'Paidós', '3', 14, 14, 5, 'disponible', 'sietehabitos.jpeg', NULL, '2025-06-30 08:21:36'),
+(20, 'Ready Player One', 'Ernest Cline', 'Nova', '1', 7, 10, 3, 'prestado', 'readyplayer.jpeg', NULL, '2025-06-30 08:20:32'),
+(21, 'Los 7 hábitos de la gente altamente efectiva', 'Stephen Covey', 'Paidós', '3', 14, 14, 4, 'prestado', 'sietehabitos.jpeg', NULL, '2025-06-30 08:21:36'),
 (22, 'El poder del ahora', 'Eckhart Tolle', 'Gaia Ediciones', '1', 17, 14, 4, 'disponible', 'poderahora.jpeg', NULL, '2025-06-30 08:22:21'),
 (23, 'Metamorfosis', 'Franz Kafka', 'Alianza Editorial', '1', 19, 15, 2, 'disponible', 'metamorfosis.jpeg', NULL, '2025-06-30 08:25:10');
 
@@ -196,7 +196,9 @@ CREATE TABLE `prestamos` (
 --
 
 INSERT INTO `prestamos` (`id`, `libro_id`, `lector_id`, `fecha_solicitud`, `fecha_inicio`, `fecha_vencimiento`, `renovado`, `estado`, `usuario_id`) VALUES
-(1, 19, 'Yunis Albe', '2025-07-01 04:57:15', NULL, NULL, 0, 'pendiente', NULL);
+(1, 19, 'Yunis Albe', '2025-07-01 04:57:15', NULL, NULL, 0, 'pendiente', NULL),
+(2, 20, 'Yunis Albe', '2025-07-01 12:53:40', NULL, NULL, 0, 'pendiente', NULL),
+(3, 21, 'Yunis Albe', '2025-07-01 12:53:52', NULL, NULL, 0, 'pendiente', NULL);
 
 -- --------------------------------------------------------
 
@@ -285,7 +287,7 @@ ALTER TABLE `multas`
 -- AUTO_INCREMENT de la tabla `prestamos`
 --
 ALTER TABLE `prestamos`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
