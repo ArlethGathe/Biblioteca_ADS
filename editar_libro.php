@@ -2,32 +2,27 @@
 session_start();
 require __DIR__ . '/db.php';
 
-// Verificar si el ID del libro fue pasado
 if (!isset($_GET['id'])) {
     die('ID de libro no especificado.');
 }
 
 $libro_id = $_GET['id'];
 
-// Obtener los datos del libro
 $sql = "SELECT * FROM libros WHERE id = :id";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([':id' => $libro_id]);
 $libro = $stmt->fetch();
 
-// Verificar si el libro existe
 if (!$libro) {
     die('El libro no existe.');
 }
 
-// Obtener géneros y clasificaciones
 $generos = $pdo->query("SELECT * FROM generos")->fetchAll();
 $clasificaciones = $pdo->query("SELECT * FROM clasificaciones")->fetchAll();
 
 $errores = [];
 $success = '';
 
-// Procesar el formulario de edición
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titulo = trim($_POST['titulo']);
     $autor = trim($_POST['autor']);
@@ -37,13 +32,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $estado = $_POST['estado'];
     $genero_id = $_POST['genero_id'];
     $clasificacion_id = $_POST['clasificacion_id'];
+    $portada_actual = $libro['portada'];
 
-    // Validar que todos los campos estén completos
+    // Manejo de subida de portada nueva
+    $portada = $portada_actual;
+    if (!empty($_FILES['portada']['name'])) {
+        $nombre_archivo = basename($_FILES['portada']['name']);
+        $ruta_archivo = __DIR__ . "/portadas/" . $nombre_archivo;
+
+        if (move_uploaded_file($_FILES['portada']['tmp_name'], $ruta_archivo)) {
+            $portada = $nombre_archivo;
+        } else {
+            $errores[] = 'Error al subir la nueva portada.';
+        }
+    }
+
     if (empty($titulo) || empty($autor) || empty($editorial)) {
         $errores[] = 'Los campos Título, Autor y Editorial son obligatorios.';
     }
 
-    // Si no hay errores, actualizar el libro
     if (empty($errores)) {
         $sql_update = "UPDATE libros SET
             titulo = :titulo,
@@ -53,7 +60,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             cantidad = :cantidad,
             estado = :estado,
             genero_id = :genero_id,
-            clasificacion_id = :clasificacion_id
+            clasificacion_id = :clasificacion_id,
+            portada = :portada
             WHERE id = :id";
 
         $stmt = $pdo->prepare($sql_update);
@@ -66,10 +74,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':estado' => $estado,
             ':genero_id' => $genero_id,
             ':clasificacion_id' => $clasificacion_id,
+            ':portada' => $portada,
             ':id' => $libro_id
         ]);
 
         $success = 'Libro actualizado correctamente.';
+        // Refrescar datos
+        $libro['portada'] = $portada;
     }
 }
 ?>
@@ -81,45 +92,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Editar Libro</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* Estilos adicionales para que coincidan con la paleta de colores */
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f6f9;
-            margin: 0;
-            padding: 0;
         }
-
         .container {
             width: 80%;
             margin: 0 auto;
             background-color: #fff;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-
         h2 {
             color: #003366;
             text-align: center;
-            margin-bottom: 20px;
         }
-
         .form-group {
             margin-bottom: 15px;
         }
-
         .form-group label {
             font-weight: bold;
         }
-
         .form-group input, .form-group select {
             width: 100%;
             padding: 10px;
             margin-top: 5px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
         }
-
         .btn-submit {
             background-color: #0056b3;
             color: white;
@@ -127,31 +125,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border-radius: 5px;
             cursor: pointer;
         }
-
-        .btn-submit:hover {
-            background-color: #00408e;
-        }
-
         .alert-error {
             color: red;
-            font-size: 14px;
         }
-
         .alert-success {
             color: green;
-            font-size: 14px;
         }
-
         .btn-back {
             background-color: #f44336;
             color: white;
             padding: 10px 20px;
-            border-radius: 5px;
             text-decoration: none;
-        }
-
-        .btn-back:hover {
-            background-color: #d32f2f;
+            display: inline-block;
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -160,10 +146,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="container">
     <h2>Editar Libro: <?php echo htmlspecialchars($libro['titulo']); ?></h2>
 
-    <!-- Botón de Volver -->
     <a href="home_usuario.php" class="btn-back">&larr; Volver al panel</a>
 
-    <!-- Mostrar mensajes de éxito o error -->
     <?php if ($success): ?>
         <p class="alert-success"><?php echo $success; ?></p>
     <?php endif; ?>
@@ -176,8 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </ul>
     <?php endif; ?>
 
-    <!-- Formulario de edición -->
-    <form method="POST" action="">
+    <form method="POST" enctype="multipart/form-data">
         <div class="form-group">
             <label for="titulo">Título *</label>
             <input type="text" name="titulo" value="<?php echo htmlspecialchars($libro['titulo']); ?>" required>
@@ -226,6 +209,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endforeach; ?>
             </select>
         </div>
+
+        <div class="form-group">
+            <label for="portada">Portada (dejar vacío para mantener la actual)</label>
+            <input type="file" name="portada" accept="image/*">
+            <?php if (!empty($libro['portada'])): ?>
+                <p>Portada actual: <strong><?php echo htmlspecialchars($libro['portada']); ?></strong></p>
+            <?php endif; ?>
+        </div>
+
         <button type="submit" class="btn-submit">Guardar cambios</button>
     </form>
 </div>

@@ -106,6 +106,57 @@ a {
     font-size: 14px;
 }
 
+
+.book-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.book-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    width: 200px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.book-card img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.book-card h3 {
+    font-size: 18px;
+    margin: 10px 0 5px;
+}
+
+.book-card p {
+    font-size: 14px;
+    margin: 4px 0;
+}
+
+.btn-search {
+    display: inline-block;
+    background-color: #007bff;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    margin: 6px 3px 0;
+    font-size: 13px;
+}
+
+.btn-search:hover {
+    background-color: #0056b3;
+}
+
 .contenedor-busqueda {
     margin-bottom: 20px;
 }
