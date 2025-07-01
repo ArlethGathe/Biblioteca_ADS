@@ -165,3 +165,75 @@ a {
 .contenedor-busqueda {
     margin-bottom: 20px;
 }
+
+/*Estilos de prestamos*/
+
+.btn-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.btn-container a {
+    display: inline-block;
+    margin: 10px;
+    padding: 15px 30px;
+    background-color: #0056b3;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.btn-container a:hover {
+    background-color: #00408e;
+}
+
+/*Verificar prestamo*/
+        .container {
+            width: 80%;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            text-align: center;
+            color: #0056b3;
+        }
+
+        .prestamo-item {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .prestamo-item h4 {
+            margin: 0 0 10px;
+            color: #0056b3;
+        }
+
+        .prestamo-item p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .btn-approve, .btn-reject {
+            background-color: #0056b3;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin: 5px;
+        }
+
+        .btn-approve:hover, .btn-reject:hover {
+            background-color: #003366;
+        }
+
+        .btn-reject {
+            background-color: #d32f2f;
+        }
