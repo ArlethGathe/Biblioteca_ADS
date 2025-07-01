@@ -7,15 +7,14 @@ $usuario_rol = isset($_SESSION['rol']) ? $_SESSION['rol'] : 'lector';
 
 // Consulta SQL para obtener los libros
 if ($usuario_rol === 'bibliotecario') {
-    $sql = "SELECT libros.id, libros.titulo, libros.autor, libros.cantidad, libros.estado, 
-                   libros.portada,
+    $sql = "SELECT libros.id, libros.titulo, libros.autor,libros.portada,
                    generos.nombre AS genero, clasificaciones.nombre AS clasificacion
             FROM libros
             LEFT JOIN generos ON libros.genero_id = generos.id
             LEFT JOIN clasificaciones ON libros.clasificacion_id = clasificaciones.id
             ORDER BY libros.creado_at DESC";
 } else {
-    $sql = "SELECT libros.id, libros.titulo, libros.autor, libros.cantidad, libros.estado, 
+    $sql = "SELECT libros.id, libros.titulo, libros.autor, libros.estado, 
                    libros.portada,
                    generos.nombre AS genero, clasificaciones.nombre AS clasificacion
             FROM libros
@@ -38,7 +37,10 @@ $libros = $result->fetchAll();
     <link rel="stylesheet" href="estilo_HomeUsuario.css">
 </head>
 <body>
-    <h2>Biblioteca Digital</h2>
+    <h2>Biblioteca Web</h2>
+    <div class="botones">
+        <input type="button" value="Volver" class="btn-back" onclick="window.location.href='home_usuario.php'">
+    </div>
     <div class="container">
 
     <!-- Barra de búsqueda -->
@@ -59,8 +61,6 @@ $libros = $result->fetchAll();
 
                         <h3><?php echo htmlspecialchars($book['titulo']); ?></h3>
                         <p><?php echo htmlspecialchars($book['autor']); ?></p>
-                        <p>Cantidad: <?php echo $book['cantidad']; ?></p>
-                        <p>Estado: <?php echo $book['estado']; ?></p>
                         <p>Género: <?php echo htmlspecialchars($book['genero']); ?></p>
                         <p>Clasificación: <?php echo htmlspecialchars($book['clasificacion']); ?></p>
 
@@ -79,7 +79,7 @@ $libros = $result->fetchAll();
             <?php endif; ?>
         </div>
     </div>
-<div class="botones">
+<div class="botones" style="margin-bottom: 20px;">
         <input type="button" value="Volver" class="btn-back" onclick="window.location.href='home_usuario.php'">
     </div>
     

@@ -71,7 +71,7 @@ $libros = $result->fetchAll();
             </div>
         <?php endif; ?>
         <div class="mb-4">
-                <a href="biblioD.php" class="btn-add">Biblioteca Digital</a>
+                <a href="biblioD.php" class="btn-add">Biblioteca Web</a>
             </div>
     </div>
         <!-- Barra de búsqueda -->

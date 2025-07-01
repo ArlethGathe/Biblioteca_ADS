@@ -2,7 +2,7 @@
 include("db.php");
 
 // Obtener todos los usuarios
-//$usuarios = $pdo->query("SELECT * FROM usuarios")->fetchALL(PDO::FETCH_ASSOC);
+$multas = $pdo->query("SELECT * FROM multas")->fetchALL(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -58,16 +58,16 @@ include("db.php");
             <th>Descripcion</th>
         </tr>
 
-        <!-- <?php //foreach ($usuarios as $fila) { ?>
+         <?php foreach ($multas as $fila) { ?>
         <tr>
-            <td><?php //echo $fila["id_usuarios"]; ?></td>
-            <td><?php //echo $fila["usuario"]; ?></td>
-            <td><?php //echo $fila["correo"]; ?></td>
-            <td><?php //echo $fila["fecha_nacimiento"]; ?></td>
-            <td><?php //echo $fila["rol"]; ?></td>
-            <td><?php //echo $fila["creado_at"]; ?></td>
+            <td><?php echo $fila["id_multa"]; ?></td>
+            <td><?php echo $fila["usuario"]; ?></td>
+            <td><?php echo $fila["titulo"]; ?></td>
+            <td><?php echo $fila["fecha_vencimiento"]; ?></td>
+            <td><?php echo $fila["cantidad_pesos"]; ?></td>
+            <td><?php echo $fila["descripcion"]; ?></td>
         </tr>
-        <?php //} ?> -->
+        <?php } ?> 
     </table>
     <div class="botones">
         <input type="button" value="Volver" class="btn-back" onclick="window.location.href='home_usuario.php'">

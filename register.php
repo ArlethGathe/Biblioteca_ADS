@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="styles.css">
 </head>
 <body class="Sinicio">
-    <div class="iniS">
+    <div class="iniS" id="nvoR">
        <h2>Registro de Lector</h2>
     <form method="post">
         <input type="text" name="usuario" placeholder="Nombre Completo" required>
