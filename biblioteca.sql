@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1:3307
--- Tiempo de generación: 01-07-2025 a las 07:31:33
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 01-07-2025 a las 09:02:35
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -30,10 +30,10 @@ SET time_zone = "+00:00";
 CREATE TABLE `apartados` (
   `id` int(10) UNSIGNED NOT NULL,
   `libro_id` int(10) UNSIGNED NOT NULL,
-  `lector_id` int(10) UNSIGNED NOT NULL,
+  `lector_id` varchar(10) NOT NULL,
   `fecha_apartado` datetime NOT NULL DEFAULT current_timestamp(),
   `estado` enum('apartado','cancelado') NOT NULL DEFAULT 'apartado',
-  `id_usuarios` varchar(10) DEFAULT NULL
+  `usuario_id` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -67,7 +67,6 @@ INSERT INTO `clasificaciones` (`id`, `nombre`) VALUES
 (13, 'Space opera'),
 (14, 'Autoayuda'),
 (15, 'Adultos');
-
 -- --------------------------------------------------------
 
 --
@@ -102,7 +101,6 @@ INSERT INTO `generos` (`id`, `nombre`) VALUES
 (17, 'Espiritualidad'),
 (18, 'Thriller'),
 (19, 'Existencialismo');
-
 -- --------------------------------------------------------
 
 --
@@ -124,6 +122,7 @@ CREATE TABLE `libros` (
   `creado_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- --------------------------------------------------------
 --
 -- Volcado de datos para la tabla `libros`
 --
@@ -150,8 +149,6 @@ INSERT INTO `libros` (`id`, `titulo`, `autor`, `editorial`, `edicion`, `genero_i
 (22, 'El poder del ahora', 'Eckhart Tolle', 'Gaia Ediciones', '1', 17, 14, 4, 'disponible', 'poderahora.jpeg', NULL, '2025-06-30 08:22:21'),
 (23, 'Metamorfosis', 'Franz Kafka', 'Alianza Editorial', '1', 19, 15, 2, 'disponible', 'metamorfosis.jpeg', NULL, '2025-06-30 08:25:10');
 
--- --------------------------------------------------------
-
 --
 -- Estructura de tabla para la tabla `prestamos`
 --
@@ -159,13 +156,13 @@ INSERT INTO `libros` (`id`, `titulo`, `autor`, `editorial`, `edicion`, `genero_i
 CREATE TABLE `prestamos` (
   `id` int(10) UNSIGNED NOT NULL,
   `libro_id` int(10) UNSIGNED NOT NULL,
-  `lector_id` int(10) UNSIGNED NOT NULL,
+  `lector_id` varchar(10) NOT NULL,
   `fecha_solicitud` datetime NOT NULL DEFAULT current_timestamp(),
   `fecha_inicio` date DEFAULT NULL,
   `fecha_vencimiento` date DEFAULT NULL,
   `renovado` tinyint(1) NOT NULL DEFAULT 0,
   `estado` enum('pendiente','activo','finalizado','renovado') NOT NULL DEFAULT 'pendiente',
-  `id_usuarios` varchar(10) DEFAULT NULL
+  `usuario_id` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -179,6 +176,7 @@ CREATE TABLE `usuarios` (
   `usuario` varchar(50) NOT NULL,
   `correo` varchar(50) NOT NULL,
   `clave` varchar(255) NOT NULL,
+  `fecha_nacimiento` date DEFAULT NULL,
   `rol` enum('bibliotecario','lector','administrador') NOT NULL DEFAULT 'lector',
   `creado_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -187,10 +185,13 @@ CREATE TABLE `usuarios` (
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id_usuarios`, `usuario`, `correo`, `clave`, `rol`, `creado_at`) VALUES
-('A203512', 'Arleth', 'arleth@gmail.com', 'arleth123', 'lector', '2025-06-29 21:56:54'),
-('B2611', 'Fernando', 'fernando@gmail.com', 'fer123', 'bibliotecario', '2025-06-29 21:58:49'),
-('C10', 'Elizabeth', 'elizabeth@gmail.com', 'elizabeth123', 'administrador', '2025-06-29 22:02:52');
+INSERT INTO `usuarios` (`id_usuarios`, `usuario`, `correo`, `clave`, `fecha_nacimiento`, `rol`, `creado_at`) VALUES
+('A203512', 'Arleth', 'arleth@gmail.com', 'arleth123', NULL, 'lector', '2025-06-30 00:14:46'),
+('A273297', 'Yunis Alberto Flores Sosa ', 'yunis_alb@gmail.com', 'yunis1234', NULL, 'lector', '2025-06-30 07:11:22'),
+('A953950', 'ALBERTO ', 'yunisALBERTO@gmail.com', '12345678', NULL, 'lector', '2025-06-30 05:25:11'),
+('B0028', 'Carlos', 'jkhyter@gmail.com', '456789123', '1999-09-15', 'bibliotecario', '2025-06-30 07:45:14'),
+('B2611', 'Fernando', 'fernando@gmail.com', 'fer123', NULL, 'bibliotecario', '2025-06-30 00:14:46'),
+('C10', 'Elizabeth', 'elizabeth@gmail.com', 'elizabeth123', NULL, 'administrador', '2025-06-30 00:14:46');
 
 --
 -- Índices para tablas volcadas
@@ -202,7 +203,7 @@ INSERT INTO `usuarios` (`id_usuarios`, `usuario`, `correo`, `clave`, `rol`, `cre
 ALTER TABLE `apartados`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_apartados_libro` (`libro_id`),
-  ADD KEY `fk_apartados_lector` (`lector_id`);
+  ADD KEY `fk_apartados_lector_` (`lector_id`),
 
 --
 -- Indices de la tabla `clasificaciones`
@@ -230,8 +231,7 @@ ALTER TABLE `libros`
 ALTER TABLE `prestamos`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_prestamos_libro` (`libro_id`),
-  ADD KEY `fk_prestamos_lector` (`lector_id`);
-
+  ADD KEY `fk_prestamos_lector` (`lector_id`),
 --
 -- Indices de la tabla `usuarios`
 --
