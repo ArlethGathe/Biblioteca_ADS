@@ -33,53 +33,19 @@ $libros = $result->fetchAll();
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Biblioteca Principal</title>
+    <title>Biblioteca Web</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="estilo_HomeUsuario.css">
 </head>
 <body>
+    <h2>Biblioteca Digital</h2>
     <div class="container">
-        <h2>Bienvenido, <?php echo htmlspecialchars($_SESSION["usuario"]); ?> 👋</h2>
 
-        <!-- Botones -->
-        <a href="logout.php" class="btn-logout">Cerrar sesión</a>
-             <?php if ( $usuario_rol === 'lector'): ?>
-            <div class="mb-4">
-                <a href="perfil.php">
-                <button class="boton-perfil">Mi perfil</button></a>
-            </div>
-        <?php endif; ?>
-        
-    <div class="acciones">
-        
-        <?php if ($usuario_rol === 'bibliotecario' || $usuario_rol === 'administrador'): ?>
-            <!-- Botón de Agregar libro solo visible para bibliotecarios -->
-            <div class="mb-4">
-                <a href="agregar_libro.php" class="btn-add">+ Agregar libro</a>
-            </div>
-            <div class="mb-4">
-                <a href="#" class="btn-add">Prestamos</a>
-            </div>
-            <div class="mb-4">
-                <a href="multas.php" class="btn-add">Multas</a>
-            </div>
-            
-        <?php endif; ?>
-        <?php if ( $usuario_rol === 'administrador'): ?>
-            <div class="mb-4">
-                <a href="gestionar_usuarios.php" class="btn-add">Gestionar Usuarios</a>
-            </div>
-        <?php endif; ?>
-        <div class="mb-4">
-                <a href="biblioD.php" class="btn-add">Biblioteca Digital</a>
-            </div>
-    </div>
-        <!-- Barra de búsqueda -->
+    <!-- Barra de búsqueda -->
         <div class="search-bar">
             <input type="text" id="searchText" placeholder="Buscar por título, autor, etc.">
             <button class="btn-search" onclick="searchBook()">Buscar</button>
         </div>
-
         <!-- Catálogo de libros -->
         <div class="book-grid">
             <?php if ($result && $result->rowCount() > 0): ?>
@@ -103,8 +69,8 @@ $libros = $result->fetchAll();
                             <a href="eliminar_libro.php?id=<?php echo $book['id']; ?>" class="btn-search">Eliminar</a>
                         <?php endif; ?>
 
-                        <?php if ($usuario_rol === 'lector' && $book['estado'] === 'disponible'): ?>
-                            <a href="solicitar_prestamo.php?id=<?php echo $book['id']; ?>" class="btn-search">Solicitar préstamo</a>
+                        <?php if ($usuario_rol === 'lector'): ?>
+                            <a href="solicitar_prestamo.php?id=<?php echo $book['id']; ?>" class="btn-search">Leer</a>
                         <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
@@ -113,7 +79,9 @@ $libros = $result->fetchAll();
             <?php endif; ?>
         </div>
     </div>
-
+<div class="botones">
+        <input type="button" value="Volver" class="btn-back" onclick="window.location.href='home_usuario.php'">
+    </div>
     
 </body>
 </html>
