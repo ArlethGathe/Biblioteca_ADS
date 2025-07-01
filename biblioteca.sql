@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 01-07-2025 a las 09:02:35
+-- Tiempo de generación: 01-07-2025 a las 20:32:54
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -67,6 +67,7 @@ INSERT INTO `clasificaciones` (`id`, `nombre`) VALUES
 (13, 'Space opera'),
 (14, 'Autoayuda'),
 (15, 'Adultos');
+
 -- --------------------------------------------------------
 
 --
@@ -101,6 +102,7 @@ INSERT INTO `generos` (`id`, `nombre`) VALUES
 (17, 'Espiritualidad'),
 (18, 'Thriller'),
 (19, 'Existencialismo');
+
 -- --------------------------------------------------------
 
 --
@@ -122,7 +124,6 @@ CREATE TABLE `libros` (
   `creado_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- --------------------------------------------------------
 --
 -- Volcado de datos para la tabla `libros`
 --
@@ -143,11 +144,36 @@ INSERT INTO `libros` (`id`, `titulo`, `autor`, `editorial`, `edicion`, `genero_i
 (16, 'Harry Potter y la piedra filosofal', 'J.K Rowling', 'Salamandra', '1', 13, 1, 10, 'disponible', 'harrypotter.jpeg', NULL, '2025-06-30 08:11:32'),
 (17, 'El hobbit', 'J.R.R Tolkien', 'Minotauro', '1', 13, 9, 2, 'reservado', 'portadas/default.png', NULL, '2025-06-30 08:13:54'),
 (18, 'Las crónicas de Narnia', 'C.S Lewis', 'Destino', '1', 7, 13, 4, 'disponible', 'narnia.jpeg', NULL, '2025-06-30 08:14:43'),
-(19, 'The Fahrenheit 451', 'Ray Bradbury', 'Minotauro', '2', 7, 12, 3, 'disponible', 'fahrenheit.jpeg', NULL, '2025-06-30 08:19:47'),
+(19, 'The Fahrenheit 451', 'Ray Bradbury', 'Minotauro', '2', 7, 12, 2, 'prestado', 'fahrenheit.jpeg', NULL, '2025-06-30 08:19:47'),
 (20, 'Ready Player One', 'Ernest Cline', 'Nova', '1', 7, 10, 4, 'disponible', 'readyplayer.jpeg', NULL, '2025-06-30 08:20:32'),
 (21, 'Los 7 hábitos de la gente altamente efectiva', 'Stephen Covey', 'Paidós', '3', 14, 14, 5, 'disponible', 'sietehabitos.jpeg', NULL, '2025-06-30 08:21:36'),
 (22, 'El poder del ahora', 'Eckhart Tolle', 'Gaia Ediciones', '1', 17, 14, 4, 'disponible', 'poderahora.jpeg', NULL, '2025-06-30 08:22:21'),
 (23, 'Metamorfosis', 'Franz Kafka', 'Alianza Editorial', '1', 19, 15, 2, 'disponible', 'metamorfosis.jpeg', NULL, '2025-06-30 08:25:10');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `multas`
+--
+
+CREATE TABLE `multas` (
+  `id_multa` int(4) NOT NULL,
+  `usuario` varchar(100) NOT NULL,
+  `titulo` varchar(100) NOT NULL,
+  `fecha_vencimiento` date DEFAULT NULL,
+  `cantidad_pesos` int(3) NOT NULL,
+  `descripcion` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `multas`
+--
+
+INSERT INTO `multas` (`id_multa`, `usuario`, `titulo`, `fecha_vencimiento`, `cantidad_pesos`, `descripcion`) VALUES
+(2, 'ALBERTO ', 'It', '0000-00-00', 200, 'Retraso en la entrega del libro'),
+(3, 'Arleth', 'El cuaderno de Noah', '0000-00-00', 400, 'Retraso en la entrega del libro y daño');
+
+-- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `prestamos`
@@ -164,6 +190,13 @@ CREATE TABLE `prestamos` (
   `estado` enum('pendiente','activo','finalizado','renovado') NOT NULL DEFAULT 'pendiente',
   `usuario_id` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `prestamos`
+--
+
+INSERT INTO `prestamos` (`id`, `libro_id`, `lector_id`, `fecha_solicitud`, `fecha_inicio`, `fecha_vencimiento`, `renovado`, `estado`, `usuario_id`) VALUES
+(1, 19, 'Yunis Albe', '2025-07-01 04:57:15', NULL, NULL, 0, 'pendiente', NULL);
 
 -- --------------------------------------------------------
 
@@ -187,7 +220,7 @@ CREATE TABLE `usuarios` (
 
 INSERT INTO `usuarios` (`id_usuarios`, `usuario`, `correo`, `clave`, `fecha_nacimiento`, `rol`, `creado_at`) VALUES
 ('A203512', 'Arleth', 'arleth@gmail.com', 'arleth123', NULL, 'lector', '2025-06-30 00:14:46'),
-('A273297', 'Yunis Alberto Flores Sosa ', 'yunis_alb@gmail.com', 'yunis1234', NULL, 'lector', '2025-06-30 07:11:22'),
+('A273297', 'Yunis Alberto Flores Sosa ', 'yunis_alb@gmail.com', 'yunis1234', '2004-10-28', 'lector', '2025-06-30 07:11:22'),
 ('A953950', 'ALBERTO ', 'yunisALBERTO@gmail.com', '12345678', NULL, 'lector', '2025-06-30 05:25:11'),
 ('B0028', 'Carlos', 'jkhyter@gmail.com', '456789123', '1999-09-15', 'bibliotecario', '2025-06-30 07:45:14'),
 ('B2611', 'Fernando', 'fernando@gmail.com', 'fer123', NULL, 'bibliotecario', '2025-06-30 00:14:46'),
@@ -226,75 +259,33 @@ ALTER TABLE `libros`
   ADD KEY `fk_libros_clasif` (`clasificacion_id`);
 
 --
+-- Indices de la tabla `multas`
+--
+ALTER TABLE `multas`
+  ADD PRIMARY KEY (`id_multa`),
+  ADD KEY `usuario` (`usuario`,`titulo`,`fecha_vencimiento`);
+
+--
 -- Indices de la tabla `prestamos`
 --
 ALTER TABLE `prestamos`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_prestamos_libro` (`libro_id`),
-  ADD KEY `fk_prestamos_lector` (`lector_id`),
---
--- Indices de la tabla `usuarios`
---
-ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`id_usuarios`),
-  ADD UNIQUE KEY `usuario` (`usuario`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT de la tabla `apartados`
+-- AUTO_INCREMENT de la tabla `multas`
 --
-ALTER TABLE `apartados`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `clasificaciones`
---
-ALTER TABLE `clasificaciones`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
-
---
--- AUTO_INCREMENT de la tabla `generos`
---
-ALTER TABLE `generos`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
-
---
--- AUTO_INCREMENT de la tabla `libros`
---
-ALTER TABLE `libros`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+ALTER TABLE `multas`
+  MODIFY `id_multa` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `prestamos`
 --
 ALTER TABLE `prestamos`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- Restricciones para tablas volcadas
---
-
---
--- Filtros para la tabla `apartados`
---
-ALTER TABLE `apartados`
-  ADD CONSTRAINT `fk_apartados_libro` FOREIGN KEY (`libro_id`) REFERENCES `libros` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `libros`
---
-ALTER TABLE `libros`
-  ADD CONSTRAINT `fk_libros_clasif` FOREIGN KEY (`clasificacion_id`) REFERENCES `clasificaciones` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_libros_genero` FOREIGN KEY (`genero_id`) REFERENCES `generos` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `prestamos`
---
-ALTER TABLE `prestamos`
-  ADD CONSTRAINT `fk_prestamos_libro` FOREIGN KEY (`libro_id`) REFERENCES `libros` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
