@@ -70,7 +70,7 @@ $libros = $result->fetchAll();
                         <?php endif; ?>
 
                         <?php if ($usuario_rol === 'lector'): ?>
-                            <a href="solicitar_prestamo.php?id=<?php echo $book['id']; ?>" class="btn-search">Leer</a>
+                            <a href="#?id=<?php echo $book['id']; ?>" class="btn-search">Leer</a>
                         <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
