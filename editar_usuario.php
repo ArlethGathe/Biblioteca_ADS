@@ -45,11 +45,12 @@ if (isset($_POST["guardar"])) {
     $id = $_POST["id_usuarios"];
     $correo = $_POST["correo"];
     $clave = $_POST["clave"];
+    $fechaNac = $_POST["fecha_nacimiento"];
     $rol = $_POST["rol"];
 
     try {
-        $stmt = $pdo->prepare("UPDATE usuarios SET correo = ?, clave = ?, rol = ? WHERE id_usuarios = ?");
-        $stmt->execute([$correo, $clave, $rol, $id]);
+        $stmt = $pdo->prepare("UPDATE usuarios SET correo = ?, clave = ?, fecha_nacimiento = ?, rol = ? WHERE id_usuarios = ?");
+        $stmt->execute([$correo, $clave, $fechaNac, $rol, $id]);
         $mensaje = "Usuario actualizado correctamente.";
     } catch (PDOException $e) {
         $mensaje = "Error al actualizar: " . $e->getMessage();
@@ -89,7 +90,10 @@ if (isset($_POST["guardar"])) {
 
         <label>Clave:</label>
         <input type="text" name="clave" value="<?php echo htmlspecialchars($datos["clave"]); ?>" required>
-
+        <label>Fecha de Nacimeinto:</label>
+        <?php
+        $fechaNacimiento = isset($datos['fecha_nacimiento']) ? htmlspecialchars($datos['fecha_nacimiento']) : '';?>
+        <input type="date" name="fechaNac" value="<?= $fechaNacimiento ?>" required>
         <label for="rol">Rol:</label>
         <select name="rol">
             <option value="administrador" <?php if ($datos["rol"] == "administrador") echo "selected"; ?>>Administrador</option>

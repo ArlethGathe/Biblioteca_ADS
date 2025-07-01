@@ -1,29 +1,29 @@
 <?php
 session_start();
-include("db.php"); // Asegúrate de que la conexión PDO está configurada correctamente
+include("db.php"); // Asegúrate de que $pdo esté definido correctamente
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $usuario = $_POST["usuario"];
+    // Asegúrate de que los nombres coincidan con los del formulario HTML
+    $id = $_POST["id_usuarios"];
     $clave = $_POST["clave"];
 
-    // Usando PDO para la consulta preparada
-    $sql = "SELECT * FROM usuarios WHERE usuario = :usuario AND clave = :clave";
-    $stmt = $pdo->prepare($sql);  // Prepara la consulta
-    $stmt->bindParam(':usuario', $usuario);
+    // Consulta segura con parámetros bien definidos
+    $sql = "SELECT * FROM usuarios WHERE id_usuarios = :id_usuarios AND clave = :clave";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':id_usuarios', $id);
     $stmt->bindParam(':clave', $clave);
     $stmt->execute();
 
-    // Verifica si se encontró el usuario
     if ($stmt->rowCount() == 1) {
-        // Almacenar el usuario y su id en la sesión
-        $usuario_data = $stmt->fetch();
+        $usuario_data = $stmt->fetch(PDO::FETCH_ASSOC);
         $_SESSION["usuario"] = $usuario_data['usuario'];
         $_SESSION["id_usuarios"] = $usuario_data['id_usuarios'];
-        $_SESSION["rol"] = $usuario_data['rol']; // Almacenar también el rol
+        $_SESSION["rol"] = $usuario_data['rol'];
 
-        header("Location: home_usuario.php"); // Redirige si las credenciales son correctas
+        header("Location: home_usuario.php");
+        exit;
     } else {
-        $error = "Credenciales inválidas"; // Si no hay coincidencias, muestra el error
+        $error = "Credenciales inválidas";
     }
 }
 ?>
@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <h2>Iniciar Sesión</h2>
     <div class="form-inicio">
         <form method="post">
-            <input type="text" name="usuario" placeholder="Usuario" required>
+            <input type="text"  name="id_usuarios" placeholder="ID" required>
             <input type="password" id="clave" name="clave" placeholder="Contraseña" required>
             <input type="checkbox" id="mostrarPass">
             <label class="mostrar">Mostrar Contraseña</label><br>
