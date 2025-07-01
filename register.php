@@ -52,9 +52,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="iniS" id="nvoR">
        <h2>Registro de Lector</h2>
     <form method="post">
-        <input type="text" name="usuario" placeholder="Nombre Completo" required>
-        <input type="email" name="correo" placeholder="Correo" required>
-        <input type="password" name="clave" placeholder="Contraseña" required>
+        <label for ="nombreU">Nombre Completo: </label>
+        <input type="text" name="usuario" placeholder="Juan Peréz" required>
+        <label for ="correoU">Correo electronico: </label>
+        <input type="email" name="correo" placeholder="juanP@gmail.com" required>
+        <label for ="passwdU">Contraseña: </label>
+        <input type="password" name="clave" placeholder="juan123" required>
         <label for ="fechaNac">Fecha de Nacimiento: </label>
         <input type ="date" name="fechaNac" id="fechaNac"  required><br>
 

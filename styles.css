@@ -95,7 +95,7 @@ a {
     background-color: #f0f8ff;
 }
 #nvoR {
-    height: 450px;
+    height: 500px;
     
 }
 
@@ -190,8 +190,8 @@ a {
 
 /*Verificar prestamo*/
         .container {
-            width: 80%;
-            margin: 30px auto;
+            width: 90%;
+            margin: auto;
             padding: 20px;
             background-color: #fff;
             border-radius: 8px;

@@ -1,7 +1,7 @@
 <?php
 include("db.php");
 
-$usuarios = $pdo->query("SELECT usuario FROM usuarios");
+$usuarios = $pdo->query("SELECT usuario FROM usuarios WHERE rol = 'lector'");
 $titulos = $pdo->query("SELECT  titulo FROM libros");
 $fechaVenS = $pdo->query("SELECT fecha_vencimiento FROM prestamos");
 
@@ -12,8 +12,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $fechaNac = $_POST["fecha_vence"];  
     $cantidadP = $_POST["deuda"];
     $descripcion = $_POST["descripcion"];
+
+    try {
+    $stmt = $pdo->prepare("INSERT INTO multas (usuario, titulo, fecha_vencimiento, cantidad_pesos, descripcion) 
+                           VALUES (:usuario, :titulo, :fecha_vence, :deuda, :descripcion)");
+    $stmt->execute([
+        ':usuario' => $usuario,
+        ':titulo' => $titulo,
+        ':fecha_vence' => $fechaNac,
+        ':deuda' => $cantidadP,
+        ':descripcion' => $descripcion
+    ]);
+    $mensaje = "Multa agregada correctamente.";
+} catch (PDOException $e) {
+    $mensaje = "Error al agregar la multa: " . $e->getMessage();
 }
 
+}
 
 ?>
 
@@ -46,10 +61,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <!-- Fecha -->
         <label for="fecha_vence">Fecha de vencimiento:</label>
-        <select name="fecha_vence" required>
+        <select name="fecha_vence" >
             <option value="">Selecciona una fecha</option>
             <?php while ($f = $fechaVenS->fetch(PDO::FETCH_ASSOC)): ?>
-                <option value="<?= $f['fecha_vencimiento'] ?>"><?= htmlspecialchars($f['fecha_venvimiento']) ?></option>
+                <option value="<?= $f['fecha_vencimiento'] ?>"><?= htmlspecialchars($f['fecha_vencimiento']) ?></option>
             <?php endwhile; ?>
         </select>
         <label for="cantidad_Pesos">Deuda:</label>
