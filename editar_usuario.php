@@ -1,31 +1,5 @@
 <?php
-/*
-include("db.php");
 
-// Obtener usuarios para el desplegable
-$usuarios = $pdo->query("SELECT id_usuarios, usuario FROM usuarios");
-
-// Cuando se selecciona un usuario para editar
-if (isset($_POST["seleccionar"])) {
-    $id = $_POST["id_usuarios"];
-    $datos = $pdo->query("SELECT * FROM usuarios WHERE id_usuarios = '$id'")->fetch_assoc();
-}
-
-// Cuando se guardan los cambios
-if (isset($_POST["guardar"])) {
-    $id = $_POST["id_usuarios"];
-    $correo = $_POST["correo"];
-    $clave = $_POST["clave"];
-    $rol = $_POST["rol"];
-
-    $sql = "UPDATE usuarios SET correo='$correo', clave='$clave', rol='$rol' WHERE id_usuarios=$id";
-
-    if ($pdo->query($sql) === TRUE) {
-        $mensaje = "Usuario actualizado correctamente.";
-    } else {
-        $mensaje = "Error al actualizar: " . $conexion->error;
-    }
-}*/
 include("db.php");
 
 // Obtener usuarios para el desplegable
@@ -45,7 +19,7 @@ if (isset($_POST["guardar"])) {
     $id = $_POST["id_usuarios"];
     $correo = $_POST["correo"];
     $clave = $_POST["clave"];
-    $fechaNac = $_POST["fecha_nacimiento"];
+    $fechaNac = $_POST["fechaNac"];
     $rol = $_POST["rol"];
 
     try {
@@ -92,8 +66,8 @@ if (isset($_POST["guardar"])) {
         <input type="text" name="clave" value="<?php echo htmlspecialchars($datos["clave"]); ?>" required>
         <label>Fecha de Nacimeinto:</label>
         <?php
-        $fechaNacimiento = isset($datos['fecha_nacimiento']) ? htmlspecialchars($datos['fecha_nacimiento']) : '';?>
-        <input type="date" name="fechaNac" value="<?= $fechaNacimiento ?>" required>
+        $fechaNac = isset($datos['fecha_nacimiento']) ? htmlspecialchars($datos['fecha_nacimiento']) : '';?>
+        <input type="date" name="fechaNac" value="<?= $fechaNac?>" required>
         <label for="rol">Rol:</label>
         <select name="rol">
             <option value="administrador" <?php if ($datos["rol"] == "administrador") echo "selected"; ?>>Administrador</option>
@@ -109,7 +83,7 @@ if (isset($_POST["guardar"])) {
 
 
     <div class="botones">
-        <input type="button" value="Volver" class="btn-back" onclick="window.location.href='home_usuario.php'">
+        <input type="button" value="Volver" class="btn-back" onclick="window.location.href='gestionar_usuarios.php'">
     </div>
 </body>
 </html>

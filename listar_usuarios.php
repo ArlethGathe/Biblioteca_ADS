@@ -55,9 +55,5 @@ $usuarios = $pdo->query("SELECT * FROM usuarios")->fetchALL(PDO::FETCH_ASSOC);
         </tr>
         <?php } ?>
     </table>
-
-    <div style="text-align: center; margin-top: 20px;">
-        <a href="gestionar_usuarios.php">← Volver a gestión</a>
-    </div>
 </body>
 </html>

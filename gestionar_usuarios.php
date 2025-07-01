@@ -47,8 +47,9 @@ if (isset($_GET['busqueda']) && $_GET['busqueda'] !== "") {
     <form method="GET" action="">
         <div class="input-con-boton">
             <input type="text" name="busqueda" placeholder="Visualizar por usuario o correo" class="input-busqueda" value="<?php echo isset($_GET['busqueda']) ? htmlspecialchars($_GET['busqueda']) : ''; ?>">
-            <button type="submit" class="boton-lupa">&#128269;</button> <!-- lupa como ícono -->
+            <button type="submit" class="boton-lupa" onclick="searchUsuario()">&#128269;</button> <!-- lupa como ícono -->
         </div>
+    
     </form>
 </div>
     <div>
@@ -58,6 +59,23 @@ if (isset($_GET['busqueda']) && $_GET['busqueda'] !== "") {
     <div class="botones">
         <input type="button" value="Volver" class="btn-back" onclick="window.location.href='home_usuario.php'">
     </div>
+    <script>
+       function searchUsuario() { 
+        const input = document.querySelector('input[name="busqueda"]'); 
+        const searchText = input.value.toLowerCase().trim(); 
+        const rows = document.querySelectorAll('table tbody tr'); 
+        rows.forEach(function(row) { const rowText = row.textContent.toLowerCase(); 
+            if (searchText === "") {
+                 row.style.display = ""; 
+                } else if (rowText.includes(searchText)) { 
+                    row.style.display = ""; 
+                } else { 
+                    row.style.display = "none"; 
+                } }); 
+    } 
+// Opcional: activar búsqueda al presionar Enter document.addEventListener('DOMContentLoaded', function() { const input = document.querySelector('input[name="busqueda"]'); input.addEventListener('keydown', function(event) { if (event.key === 'Enter') { event.preventDefault(); // Evita enviar el formulario si lo hay searchUsuarioTable(); } }); }); 
+        
+    </script>
 </div>
 </body>
 </html>

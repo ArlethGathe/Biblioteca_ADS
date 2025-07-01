@@ -203,7 +203,7 @@ INSERT INTO `usuarios` (`id_usuarios`, `usuario`, `correo`, `clave`, `fecha_naci
 ALTER TABLE `apartados`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_apartados_libro` (`libro_id`),
-  ADD KEY `fk_apartados_lector_` (`lector_id`),
+  ADD KEY `fk_apartados_lector_` (`lector_id`);
 
 --
 -- Indices de la tabla `clasificaciones`
