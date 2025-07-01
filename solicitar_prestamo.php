@@ -66,6 +66,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $errores[] = 'No hay libros disponibles para préstamo en este momento.';
     }
+
+    
+
 }
 
 ?>
@@ -188,8 +191,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <p><?php echo htmlspecialchars($libro['autor']); ?></p>
         <p>Cantidad: <?php echo $libro['cantidad']; ?></p>
         <p>Estado: <?php echo $libro['estado']; ?></p>
-        <p>Género: <?php echo $generos[$genero_id - 1]['nombre']; ?></p>
-        <p>Clasificación: <?php echo $clasificaciones[$clasificacion_id - 1]['nombre']; ?></p>
+        <?php
+        function buscarPorId($array, $id) {
+            foreach ($array as $item) {
+                if ($item['id'] == $id) {
+                    return $item['nombre'];
+                }
+            }
+            return 'Desconocido';
+            }
+        ?>
+       <p>Género: <?php echo buscarPorId($generos, $genero_id); ?></p>
+    <p>Clasificación: <?php echo buscarPorId($clasificaciones, $clasificacion_id); ?></p>
+
     </div>
 
     <!-- Botón para solicitar préstamo -->
